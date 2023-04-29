@@ -1,14 +1,15 @@
 import styled from "styled-components";
 import {SearchInput} from "../components/SearchInput.jsx";
 import {InfoCard} from "../components/InfoCard.jsx";
-import {BiTimer} from "react-icons/bi";
-import {Header} from "../components/Header.jsx";
-import {Footer} from "../components/Footer.jsx";
+import {Button} from "../components/Button.jsx";
+import {CiLocationArrow1} from "react-icons/ci";
+import {MdCompareArrows} from "react-icons/md";
+import {RiLineChartLine, RiNotification2Fill} from "react-icons/ri";
+import {FaChalkboardTeacher} from "react-icons/fa";
 
 export const Landing = () => {
     return (
         <>
-            <Header/>
             <Main>
                 <MainSection>
                     <SearchContainer>
@@ -18,8 +19,13 @@ export const Landing = () => {
                         <SearchDescription>Encuentra a tu profesor perfecto</SearchDescription>
                         <SearchInput/>
                     </SearchContainer>
+                    <Button
+                        text={'Ver todos los docentes'}
+                        width={'270px'}
+                        fontSize={'18px'}
+                        icon={<CiLocationArrow1 fontSize={'24px'}/>}
+                    />
                     <ArrowWrapper>
-                        <h3>Descubre más</h3>
                         <a href="#features-section">
                             <svg viewBox="0 0 72 19" fill="none" xmlns="http://www.w3.org/2000/svg"
                                  height="19px" width="72px" cursor={'pointer'}>
@@ -33,23 +39,27 @@ export const Landing = () => {
                 <CardsSectionTitle id={'features-section'}>Features</CardsSectionTitle>
                 <CardsSection>
                     <InfoCard
-                        icon={<BiTimer fontSize={'38px'}/>}
-                        title={'Rápidez'}
+                        icon={<MdCompareArrows fontSize={'38px'}/>}
+                        title={'Comparación de profesores'}
                         description={
-                        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab accusantium amet cum debitis dolore, ducimus eveniet fuga.'}/>
+                        'Podrás comparar de 2 a más profesores y ver sus calificaciones, comentarios y cursos, para que puedas elegir al mejor profesor para ti.'}/>
                     <InfoCard
-                        icon={<BiTimer fontSize={'38px'}/>}
-                        title={'Rápidez'}
+                        icon={<RiNotification2Fill fontSize={'38px'}/>}
+                        title={'Notificaciones personalizadas'}
                         description={
-                            'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab accusantium amet cum debitis dolore, ducimus eveniet fuga.'}/>
+                            'Una vez que te hayas registrado, todos los cambios en las calificaciones de tus profesores favoritos o los que tú escojas, serán enviados a tu correo electrónico.'}/>
                     <InfoCard
-                        icon={<BiTimer fontSize={'38px'}/>}
-                        title={'Rápidez'}
+                        icon={<RiLineChartLine fontSize={'38px'}/>}
+                        title={'Trayectoria de profesor'}
                         description={
-                            'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab accusantium amet cum debitis dolore, ducimus eveniet fuga.'}/>
+                            'Hemos incluido una nueva opción donde podrás ver el historial de como ha ido mejorando la enseñanza del profesor a través del tiempo.'}/>
+                    <InfoCard
+                        icon={<FaChalkboardTeacher fontSize={'38px'}/>}
+                        title={'Profesores'}
+                        description={
+                            '¿Eres profesor? ¡Perfecto! Podrás tener acceso exclusivo a recursos adicionales sobre tus calificaciones y comentarios.'}/>
                 </CardsSection>
             </Main>
-            <Footer/>
         </>
     )
 }
@@ -108,7 +118,7 @@ const ArrowWrapper = styled.div`
 
 const CardsSection = styled.section`
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 14px;
     align-items: center;
     justify-content: center;
