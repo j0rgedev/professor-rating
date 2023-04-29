@@ -21,7 +21,7 @@ export const SearchInput = () => {
 
     return (
         <Form ref={dropdownRef}>
-            <Input type="text" placeholder={'Empieza a escribir para buscar'} onClick={toggleDropdown} />
+            <Input type="text" placeholder={'Busca a tu docente ...'} onClick={toggleDropdown} />
             {showDropdown && (
                 <Dropdown>
                     <ul>
