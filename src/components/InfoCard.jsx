@@ -19,6 +19,7 @@ const Card = styled.div`
     justify-content: space-around;
     align-items: center;
     padding: 20px;
+    box-sizing: border-box;
     gap: 14px;
     h4,p {margin:0}
 `
