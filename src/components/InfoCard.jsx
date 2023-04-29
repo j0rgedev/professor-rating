@@ -22,6 +22,11 @@ const Card = styled.div`
     box-sizing: border-box;
     gap: 14px;
     h4,p {margin:0}
+
+    @media (min-width: 724px) {
+        min-height: 300px;
+        max-width: 330px;
+    }
 `
 
 const IconWrapper = styled.div`
@@ -35,6 +40,7 @@ const Title = styled.h4`
     font-size: 1.125rem;
     line-height: 24px;
     letter-spacing: -0.28px;
+    text-align: center;
 `
 
 const Description = styled.p`

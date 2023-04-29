@@ -50,6 +50,7 @@ const Input = styled.input`
     padding: 0.5rem 1.5rem;
     width: 100%;
     height: 50px;
+    box-shadow: rgba(0, 0, 0, 0.31) 0px -0.5px 0px, rgba(0, 0, 0, 0.31) 0px 0px 18px;
     box-sizing: border-box;
     font-size: 18px;
     color: white;
@@ -63,8 +64,8 @@ const Input = styled.input`
     }
     
     @media (min-width: 724px) {
-    font-size: 24px;
-    height: 60px;
+        font-size: 24px;
+        height: 60px;
     }
 `;
 
