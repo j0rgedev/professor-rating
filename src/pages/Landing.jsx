@@ -13,7 +13,7 @@ export const Landing = () => {
                 <MainSection>
                     <SearchContainer>
                         <ImageWrapper>
-                            <img src="/utp-logo.png" alt="utp-logo" width={'100%'} height={'100%'}/>
+                            <img src="./utp-logo.png" alt="utp-logo" width={'100%'} height={'100%'}/>
                         </ImageWrapper>
                         <SearchDescription>Encuentra a tu profesor perfecto</SearchDescription>
                         <SearchInput/>
