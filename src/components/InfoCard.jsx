@@ -1,11 +1,39 @@
 import styled from "styled-components";
+import {motion} from "framer-motion";
 export const InfoCard = ({icon, title, description}) => {
+
+    const cardVariants = {
+        offscreen: {
+            y: 300
+        },
+        onscreen: {
+            y: 0,
+            transition: {
+                type: "spring",
+                bounce: 0.4,
+                duration: 0.8
+            }
+        }
+    }
+
     return (
-        <Card>
-            <IconWrapper>{icon}</IconWrapper>
-            <Title>{title}</Title>
-            <Description>{description}</Description>
-        </Card>
+        <motion.div
+            className={'card-container'}
+            initial="offscreen"
+            whileInView="onscreen"
+            viewport={{ once: true, amount: 0.8 }}
+        >
+            <motion.div
+                variants={cardVariants}
+            >
+                <Card>
+                    <IconWrapper>{icon}</IconWrapper>
+                    <Title>{title}</Title>
+                    <Description>{description}</Description>
+                </Card>
+            </motion.div>
+        </motion.div>
+
     )
 }
 

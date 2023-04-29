@@ -6,8 +6,9 @@ import {CiLocationArrow1} from "react-icons/ci";
 import {MdCompareArrows} from "react-icons/md";
 import {RiLineChartLine, RiNotification2Fill} from "react-icons/ri";
 import {FaChalkboardTeacher} from "react-icons/fa";
+import {FeaturesModal} from "../components/FeaturesModal.jsx";
+export const Landing = ({ isModalOpen, onCloseModal }) => {
 
-export const Landing = () => {
     return (
         <>
             <Main>
@@ -42,7 +43,8 @@ export const Landing = () => {
                         icon={<MdCompareArrows fontSize={'38px'}/>}
                         title={'Comparación de profesores'}
                         description={
-                        'Podrás comparar de 2 a más profesores y ver sus calificaciones, comentarios y cursos, para que puedas elegir al mejor profesor para ti.'}/>
+                            'Podrás comparar de 2 a más profesores y ver sus calificaciones, comentarios y cursos, para que puedas elegir al mejor profesor para ti.'}
+                    />
                     <InfoCard
                         icon={<RiNotification2Fill fontSize={'38px'}/>}
                         title={'Notificaciones personalizadas'}
@@ -122,6 +124,10 @@ const CardsSection = styled.section`
     gap: 14px;
     align-items: center;
     justify-content: center;
+  
+    .card-container{
+        overflow: hidden;
+    }
 
     @media (min-width: 724px) {
         flex-direction: row;

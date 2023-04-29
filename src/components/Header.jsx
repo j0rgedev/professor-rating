@@ -1,10 +1,15 @@
 import {TbGridDots} from "react-icons/tb";
 import {Button} from "./Button.jsx";
 import styled from "styled-components";
-export const Header = () => {
+export const Header = ({onModalToggle}) => {
+
+    const handleOpenModal = () => {
+        onModalToggle()
+    }
+
     return (
         <CustomHeader>
-            <TbGridDots fontSize={'40px'} cursor={'pointer'}/>
+            <TbGridDots fontSize={'40px'} cursor={'pointer'} onClick={handleOpenModal}/>
             <Button text={'Mi cuenta'} width={'120px'} height={'40px'} fontSize={'16px'}/>
         </CustomHeader>
     )
