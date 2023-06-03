@@ -1,40 +1,44 @@
-import styled from 'styled-components';
-import {BsFillTrashFill, BsFillEyeFill} from 'react-icons/bs';
-import {useContext} from "react";
-import {TeacherModalContext} from "../../setup/config/TeacherModalContext.jsx";
+import { useState } from "react";
+import styled from "styled-components";
+import { AiFillEdit } from "react-icons/ai";
+import TeacherModal from "../../components/admin/TeacherModal.jsx";
 
-const TeachersRow = ({ number, teacherImage, teacherName, courses, isActive }) => {
-
-	const {setIsModalOpen, setDeleteModalInfo} = useContext(TeacherModalContext)
-	const displayedCourses = courses.slice(0, 3);
-
-	return (
-		<Row>
-			<Number>{number}</Number>
-			<ImageAndName>
-				<TeacherImage src={teacherImage} alt={teacherName} />
-				<TeacherName>{teacherName}</TeacherName>
-			</ImageAndName>
-			<Courses>
-				{displayedCourses.map((course, index) => (
-					<Course key={index}>{course}</Course>
-				))}
-				{courses.length > 4 && <Course>+{courses.length - 3}</Course>}
-			</Courses>
-			<Verification isActive={isActive}>{isActive ? 'Verificado' : 'Sin verificar'}</Verification>
-			<Actions>
-				<DetailsButton>
-					<BsFillEyeFill/>
-				</DetailsButton>
-				<DeleteButton onClick={() => {setDeleteModalInfo({
-					title: "Eliminar profesor",
-					message: "¿Estás seguro que deseas eliminar a este profesor? Esta acción no se puede deshacer.",
-				})}}>
-					<BsFillTrashFill />
-				</DeleteButton>
-			</Actions>
-		</Row>
-	);
+const TeachersRow = ({ number, teacher, isActive }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log(teacher);
+  return (
+    <Row>
+      <TeacherModal
+        modalState={isModalOpen}
+        modalStateSetter={setIsModalOpen}
+        _teacher={teacher}
+        isFromRow={true}
+      />
+      <Number>{number}</Number>
+      <ImageAndName>
+        <TeacherImage src={teacher.picture} alt="img" />
+        <TeacherName>{`${teacher.lastName}, ${teacher.firstName}`}</TeacherName>
+      </ImageAndName>
+      <Courses>
+        {teacher.courses.slice(0, 2).map((course, index) => (
+          <div key={index}>
+            <Course>{course.name}</Course>
+          </div>
+        ))}
+        {teacher.courses.length > 3 && <Course>+{teacher.courses.length - 2}</Course>}
+      </Courses>
+      <Verification isActive={isActive}>{isActive ? "Verificado" : "Sin verificar"}</Verification>
+      <Actions>
+        <DeleteButton
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          <AiFillEdit />
+        </DeleteButton>
+      </Actions>
+    </Row>
+  );
 };
 
 const Row = styled.div`
@@ -48,7 +52,7 @@ const Row = styled.div`
 `;
 
 const Number = styled.div`
-  width: 30px;
+  width: 15px;
   text-align: center;
 `;
 
@@ -56,7 +60,7 @@ const ImageAndName = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  width: 300px;
+  width: 400px;
 `;
 
 const TeacherImage = styled.img`
@@ -98,8 +102,8 @@ const Verification = styled.div`
   height: 100%;
   padding: 6px 12px;
   border-radius: 4px;
-  background-color: ${({ isActive }) => (isActive ? '#143FF6' : 'transparent')};
-  border: ${({ isActive }) => (isActive ? 'none' : '1px solid #ffffff')};
+  background-color: ${({ isActive }) => (isActive ? "#143FF6" : "transparent")};
+  border: ${({ isActive }) => (isActive ? "none" : "1px solid #ffffff")};
 `;
 
 const Actions = styled.div`
