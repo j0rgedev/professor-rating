@@ -1,74 +1,109 @@
-import styled from 'styled-components'
+import { useEffect, useState } from "react";
+import styled from "styled-components";
 import CustomButton from "../../components/admin/CustomButton.jsx";
 import SearchInput from "../../components/admin/SearchInput.jsx";
 import TeachersRow from "../../components/admin/TeachersRow.jsx";
-import AddTeacher from "../../components/admin/TeacherModal.jsx";
-import {useContext, useState} from "react";
-import {TeacherModalContext} from "../../setup/config/TeacherModalContext.jsx";
-import {useQuery} from "react-query";
-import {getTeachers} from "../../setup/api/allTeachers.js";
+import TeacherModal from "../../components/admin/TeacherModal.jsx";
+import { getTeachers } from "../../setup/api/teachers.js";
+import { getCoursesByTeacher } from "../../setup/api/courses.js";
+
 export function Teachers() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [teachers, setTeachers] = useState([]);
+  const [teacherToSearch, setTeacherToSearch] = useState("");
+  const [teachersCourses, setTeachersCourses] = useState([]);
 
-	const {setIsModalOpen, setIsDeleteModalOpen} = useContext(TeacherModalContext)
+  useEffect(() => {
+    if (teacherToSearch === "") {
+      getTeachers().then(async (data) => {
+        await Promise.all(
+          data.map(async (teacher) => {
+            const courses = await getCoursesByTeacher(teacher._id);
+            return courses;
+          })
+        ).then((results) => {
+          setTeachersCourses(results);
+          setTeachers(data);
+        });
+      });
+      return;
+    }
+    getTeachersByName(teacherToSearch).then(async (data) => {
+      await Promise.all(
+        data.map(async (teacher) => {
+          const courses = await getCoursesByTeacher(teacher._id);
+          return courses;
+        })
+      ).then((results) => {
+        setTeachersCourses(results);
+        setTeachers(data);
+      });
+    });
+  }, [isModalOpen, teacherToSearch]);
 
-	const {isLoading, data} = useQuery('teachers', getTeachers, {
-		onError: (error) => {
-			console.log(error)
-		}
-	})
-
-	return (
-		<>
-			<HeaderSection>
-				<Left>
-					<h1>Manejar Profesores</h1>
-					<SearchInput placeholder={'Buscar profesor'}/>
-				</Left>
-				<CustomButton onClick={() => {setIsModalOpen(true)}}>Agregar profesor</CustomButton>
-			</HeaderSection>
-			<TeachersTable>
-				{
-					!isLoading && data?.map((teacher, index) => {
-						return (
-							<TeachersRow
-								number={index+1}
-								teacherName={teacher.nombres+' '+teacher.apellidos}
-								teacherImage={'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50'}
-								courses={teacher.cursos}
-								isActive={false}
-								setIsDeleteModalOpen={setIsDeleteModalOpen}
-							/>
-						)
-					})
-				}
-			</TeachersTable>
-		</>
-	)
+  return (
+    <>
+      <TeacherModal
+        modalState={isModalOpen}
+        modalStateSetter={setIsModalOpen}
+        _teacher={{ firstName: "", lastName: "" }}
+      />
+      <HeaderSection>
+        <Left>
+          <h1>Administrar Profesores</h1>
+          <SearchInput
+            placeholder={"Buscar profesor"}
+            onChange={(e) => setTeacherToSearch(e.target.value)}
+          />
+        </Left>
+        <CustomButton
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          Agregar profesor
+        </CustomButton>
+      </HeaderSection>
+      <TeachersTable>
+        {teachers.map((teacher, index) => {
+          return (
+            <div key={teacher._id}>
+              <TeachersRow
+                number={index + 1}
+                teacher={{ ...teacher, courses: teachersCourses[index] }}
+                isActive={false}
+              />
+            </div>
+          );
+        })}
+      </TeachersTable>
+    </>
+  );
 }
 
 const HeaderSection = styled.div`
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-  	height: 44px;
-  	margin-bottom: 30px;
-  
-  	button {
-		min-width: 200px;
-    }
-`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 44px;
+  margin-bottom: 30px;
+
+  button {
+    min-width: 200px;
+  }
+`;
 
 const Left = styled.div`
-	display: flex;
-	align-items: center;
-  	gap: 60px;
-  	height: 100%;
-	h1 {
-		font-size: 24px;
-		font-weight: 500;
-	}
-`
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  height: 100%;
+  h1 {
+    font-size: 24px;
+    font-weight: 500;
+  }
+`;
 
 const TeachersTable = styled.div`
-    flex: 1;
-`
+  flex: 1;
+`;

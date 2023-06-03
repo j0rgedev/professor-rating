@@ -1,123 +1,210 @@
-import React, {useContext, useState} from 'react';
-import styled from 'styled-components';
-import {AiOutlineClose } from 'react-icons/ai';
-import {BsPatchPlusFill} from "react-icons/bs";
-import {TeacherModalContext} from "../../setup/config/TeacherModalContext.jsx";
-import {motion} from "framer-motion";
-import {ErrorMessage, Field, Form, Formik} from "formik";
-import {newTeacherSchema} from "../../setup/config/newTeacherSchema.js";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { AiOutlineClose } from "react-icons/ai";
+import { BsPatchPlusFill } from "react-icons/bs";
+import { motion } from "framer-motion";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { newTeacherSchema } from "../../setup/config/newTeacherSchema.js";
+import { getCourses, addTeacherToCourse } from "../../setup/api/courses.js";
+import { createTeacher, updateTeacher } from "../../setup/api/teachers.js";
 
-const TeacherModal = () => {
+const TeacherModal = ({ modalState, modalStateSetter, _teacher, isFromRow }) => {
+  const [teacher, setTeacher] = useState({
+    firstName: _teacher.firstName,
+    lastName: _teacher.lastName,
+    courses: _teacher.courses ? _teacher.courses.map((obj) => obj.name) : [],
+    coursesId: _teacher.courses ? _teacher.courses.map((obj) => obj._id) : [],
+  });
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedCourseId, setSelectedCourseId] = useState("");
+  const [courses, setCourses] = useState([]);
 
-	const {setIsModalOpen} = useContext(TeacherModalContext)
+  useEffect(() => {
+    getCourses().then((data) => {
+      setCourses(data);
+    });
+  }, []);
 
-	const [teacherInfo, setTeacherInfo] = useState({
-		names: '',
-		lastnames: '',
-		courses: []
-	})
-	const [selectedCourse, setSelectedCourse] = useState('');
+  const handleAddCourse = () => {
+    setTeacher({
+      ...teacher,
+      courses: [...teacher.courses, selectedCourse],
+      coursesId: [...teacher.coursesId, selectedCourseId],
+    });
+    setSelectedCourse("");
+  };
 
-	const handleAddCourse = () => {
-		setTeacherInfo({
-			...teacherInfo,
-			courses: [...teacherInfo.courses, selectedCourse]
-		})
-		setSelectedCourse('');
-	};
+  const handleCourseChange = (e) => {
+    let optionElement = e.target.childNodes[e.target.selectedIndex];
+    let id = optionElement.getAttribute("id");
+    setSelectedCourseId(id);
+    setSelectedCourse(e.target.value);
+  };
 
-	const handleCourseChange = (event) => {
-		setSelectedCourse(event.target.value);
-	};
+  const handleFirstNameChange = (e) => {
+    setTeacher({
+      ...teacher,
+      firstName: e.target.value,
+    });
+  };
 
-	const handleNameChange = (event) => {
-		setTeacherInfo({
-			...teacherInfo,
-			names: event.target.value
-		})
-	};
+  const handleLastNameChange = (e) => {
+    setTeacher({
+      ...teacher,
+      lastName: e.target.value,
+    });
+  };
 
-	const handleLastnameChange = (event) => {
-		setTeacherInfo({
-			...teacherInfo,
-			lastnames: event.target.value
-		})
-	};
+  const handleRemoveCourse = (index) => {
+    const updatedCourses = [...teacher.courses];
+    const updatedCoursesId = [...teacher.coursesId];
+    updatedCourses.splice(index, 1);
+    updatedCoursesId.splice(index, 1);
+    setTeacher({
+      ...teacher,
+      courses: updatedCourses,
+      coursesId: updatedCoursesId,
+    });
+  };
 
-	const handleRemoveCourse = (index) => {
-		const updatedCourses = [...teacherInfo.courses];
-		updatedCourses.splice(index, 1);
-		setTeacherInfo({
-			...teacherInfo,
-			courses: updatedCourses
-		})
-	};
+  const onSubmit = async () => {
+    console.log(teacher);
 
-	const onSubmit = (values) => {
-		console.log(values)
-	}
+    let teacherData = {
+      firstName: teacher.firstName,
+      lastName: teacher.lastName,
+      picture: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+    };
 
-	return (
-		<Backdrop>
-			<ModalContainer
-				initial={{opacity: 0, scale: 0.8}}
-				animate={{opacity: 1, scale: 1}}
-				exit={{opacity: 0, scale: 0.8}}
-				transition={{duration: 0.3}}
-			>
-				<ModalHeader>Nuevo Profesor</ModalHeader>
-				<Formik
-					initialValues={teacherInfo}
-					enableReinitialize={true}
-					validationSchema={newTeacherSchema}
-					onSubmit={onSubmit}
-				>
-					{
-						({errors, touched, isSubmitting}) => (
-							<CustomForm>
-								<ModalContent>
-									<Input type="text" placeholder="Nombres" name={'names'} onChange={handleNameChange}/>
-									{touched.names && errors.names && <ErrorMessage name="names"/>}
-									<Input type="text" placeholder="Apellidos" name="lastnames" onChange={handleLastnameChange}/>
-									{touched.names && errors.lastnames && <ErrorMessage name="lastnames" />}
-									<CoursesOptions>
-										<CourseSelect as={'select'} value={selectedCourse} onChange={handleCourseChange} name={'courses'}>
-											<option value="" disabled={true}>Seleccionar curso</option>
-											<option value="Redes y Comunicaciones 1">Redes y Comunicaciones 1</option>
-											<option value="Redes y Comunicaciones 3">Redes y Comunicaciones 3</option>
-											<option value="Introducción a las TIC">Introducción a las TIC</option>
-										</CourseSelect>
-										<AddCourseButton onClick={() => {
-											handleAddCourse();
-										}} disabled={!selectedCourse}>
-											<BsPatchPlusFill/>
-										</AddCourseButton>
-									</CoursesOptions>
-									{touched.courses && errors.courses && <ErrorMessage name="courses"/>}
-								</ModalContent>
-								<TeacherCourses>
-									{teacherInfo.courses.map((course, index) => (
-										<CourseContainer key={index}>
-											<CourseInfo>{course}</CourseInfo>
-											<RemoveCourseButton onClick={() => {
-												handleRemoveCourse(index);
-											}}>
-												<AiOutlineClose />
-											</RemoveCourseButton>
-										</CourseContainer>
-									))}
-								</TeacherCourses>
-								<ModalFooter>
-									<StyledButton main={false} type={'button'} onClick={()=>{setIsModalOpen(false)}}>Cancelar</StyledButton>
-									<StyledButton main={true} type={'submit'} disabled={isSubmitting}>Agregar</StyledButton>
-								</ModalFooter>
-							</CustomForm>
-						)
-					}
-				</Formik>
-			</ModalContainer>
-		</Backdrop>
-	);
+    if (isFromRow) {
+      await updateTeacher(_teacher._id, teacherData);
+      modalStateSetter(false);
+      return;
+    }
+
+    createTeacher(teacherData).then((data) => {
+      console.log(data);
+      teacher.coursesId.forEach((courseId) => {
+        addTeacherToCourse(courseId, data._id);
+      });
+      setTeacher({ firstName: "", lastName: "", courses: [], coursesId: [] });
+      modalStateSetter(false);
+    });
+  };
+
+  if (!modalState) {
+    return null;
+  }
+
+  return (
+    <Backdrop>
+      <ModalContainer
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.8 }}
+        transition={{ duration: 0.3 }}
+      >
+        <ModalHeader>{isFromRow ? "Actualizar" : "Nuevo"} Profesor</ModalHeader>
+        <Formik
+          initialValues={teacher}
+          enableReinitialize={true}
+          validationSchema={newTeacherSchema}
+          onSubmit={onSubmit}
+        >
+          {({ values, errors, touched, isSubmitting }) => (
+            <CustomForm>
+              <ModalContent>
+                <Input
+                  type="text"
+                  placeholder="Nombres"
+                  name="firstName"
+                  onChange={handleFirstNameChange}
+                  value={values.firstName}
+                />
+                {touched.firstName && errors.firstName && <ErrorMessage name="firstName" />}
+                <Input
+                  type="text"
+                  placeholder="Apellidos"
+                  name="lastName"
+                  onChange={handleLastNameChange}
+                  value={values.lastName}
+                />
+                {touched.lastName && errors.lastName && <ErrorMessage name="lastName" />}
+                <CoursesOptions>
+                  <CourseSelect
+                    as={"select"}
+                    value={selectedCourse}
+                    onChange={handleCourseChange}
+                    name={"courses"}
+                  >
+                    <option key="0" value="" disabled={true}>
+                      Seleccionar curso
+                    </option>
+                    {courses.map((course, index) => {
+                      return (
+                        <option key={index + 1} id={course._id} value={course.name}>
+                          {course.name}
+                        </option>
+                      );
+                    })}
+                  </CourseSelect>
+                  <AddCourseButton
+                    onClick={() => {
+                      handleAddCourse();
+                    }}
+                    disabled={!selectedCourse}
+                  >
+                    <BsPatchPlusFill />
+                  </AddCourseButton>
+                </CoursesOptions>
+                {touched.courses && errors.courses && <ErrorMessage name="courses" />}
+              </ModalContent>
+              <TeacherCourses>
+                {teacher.courses.map((course, index) => (
+                  <CourseContainer key={index}>
+                    <CourseInfo>{course}</CourseInfo>
+                    <RemoveCourseButton
+                      onClick={() => {
+                        handleRemoveCourse(index);
+                      }}
+                    >
+                      <AiOutlineClose />
+                    </RemoveCourseButton>
+                  </CourseContainer>
+                ))}
+              </TeacherCourses>
+              <ModalFooter>
+                <StyledButton
+                  main={false}
+                  type={"button"}
+                  onClick={() => {
+                    setTeacher({ firstName: "", lastName: "", courses: [], coursesId: [] });
+                    modalStateSetter(false);
+                  }}
+                >
+                  Cancelar
+                </StyledButton>
+                {isFromRow ? (
+                  <StyledButton
+                    main={true}
+                    type={"button"}
+                    onClick={() => {
+                      onDeletion();
+                    }}
+                  >
+                    Eliminar
+                  </StyledButton>
+                ) : null}
+                <StyledButton main={true} type={"submit"} disabled={isSubmitting}>
+                  {isFromRow ? "Actualizar" : "Agregar"}
+                </StyledButton>
+              </ModalFooter>
+            </CustomForm>
+          )}
+        </Formik>
+      </ModalContainer>
+    </Backdrop>
+  );
 };
 
 const Backdrop = styled.div`
@@ -157,9 +244,9 @@ const ModalContent = styled.div`
   flex-wrap: wrap;
   gap: 16px;
   justify-content: space-between;
-  
-  input{
-	width: 220px;
+
+  input {
+    width: 220px;
     font-size: 18px;
   }
 `;
@@ -204,9 +291,9 @@ const CourseSelect = styled(Field)`
   color: #ffffff;
   padding: 4px;
   font-size: 18px;
-  
+
   option {
-	color: #000000;
+    color: #000000;
   }
 `;
 
@@ -224,7 +311,7 @@ const CourseInfo = styled.div`
   flex-grow: 1;
   color: #ffffff;
   margin-right: 8px;
-  font-size: .8rem;
+  font-size: 0.8rem;
 `;
 
 const RemoveCourseButton = styled.button`
@@ -254,7 +341,7 @@ const ModalFooter = styled.div`
 `;
 
 const StyledButton = styled.button`
-  background-color: ${(props) => (props.main ? '#143FF6' : 'transparent')};
+  background-color: ${(props) => (props.main ? "#143FF6" : "transparent")};
   color: #ffffff;
   padding: 8px 16px;
   border-radius: 4px;
@@ -263,17 +350,16 @@ const StyledButton = styled.button`
   width: 160px;
   font-size: 18px;
   transition: background-color 0.2s ease-in-out;
-  
-  &:hover{
-  	background-color: ${(props) => (props.main ? '#0d2de0' : 'rgba(119,119,119,0.3)')};
+
+  &:hover {
+    background-color: ${(props) => (props.main ? "#0d2de0" : "rgba(119,119,119,0.3)")};
   }
-  
-  &:disabled{
-  	background-color: rgba(119,119,119,0.3);
-    color: rgba(255,255,255,0.3);
-  	cursor: not-allowed;
+
+  &:disabled {
+    background-color: rgba(119, 119, 119, 0.3);
+    color: rgba(255, 255, 255, 0.3);
+    cursor: not-allowed;
   }
 `;
-
 
 export default TeacherModal;

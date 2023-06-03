@@ -1,7 +1,7 @@
-import * as yup from 'yup';
+import * as yup from "yup";
 
 export const newTeacherSchema = yup.object().shape({
-    names: yup.string().required('Campo requerido'),
-	lastnames: yup.string().required('Campo requerido'),
-	courses: yup.array().required('Campo requerido').min(1, 'Debe seleccionar al menos un curso'),
+  firstName: yup.string().required("Campo requerido"),
+  lastName: yup.string().required("Campo requerido"),
+  // picture: yup.string().required("Campo requerido"),
 });

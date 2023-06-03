@@ -4,8 +4,11 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import {Login} from "./pages/Login.jsx";
 import GlobalStyles from "./styles/globalStyles.js";
 import {AdminLayout} from "./pages/admin/AdminLayout.jsx";
-import {Teachers} from "./pages/admin/Teachers.jsx";
+
 import {Comments} from "./pages/admin/Comments.jsx";
+import {Courses} from "./pages/admin/Courses.jsx";
+import {Teachers} from "./pages/admin/Teachers.jsx";
+
 import {Landing} from "./pages/Landing.jsx";
 import {LandingLayout} from "./pages/LandingLayout.jsx";
 import {TeacherList} from "./pages/TeacherList.jsx";
@@ -39,6 +42,10 @@ const router = createBrowserRouter([
 			{
 				path: 'profesores',
 				element: <Teachers/>,
+			},
+			{
+				path: 'cursos',
+				element: <Courses/>,
 			},
 			{
 				path: 'comentarios',
