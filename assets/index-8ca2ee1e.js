@@ -851,58 +851,58 @@ attempted value: ${s}
     color: #C7C7C7;
     text-align: center;
 `;function Gc(e){return Ot({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"path",attr:{d:"m20.145 8.27 1.563-1.563-1.414-1.414L18.586 7c-1.05-.63-2.274-1-3.586-1-3.859 0-7 3.14-7 7s3.141 7 7 7 7-3.14 7-7a6.966 6.966 0 0 0-1.855-4.73zM15 18c-2.757 0-5-2.243-5-5s2.243-5 5-5 5 2.243 5 5-2.243 5-5 5z"}},{tag:"path",attr:{d:"M14 10h2v4h-2zm-1-7h4v2h-4zM3 8h4v2H3zm0 8h4v2H3zm-1-4h3.99v2H2z"}}]})(e)}const Q5=()=>w.jsxs(w.Fragment,{children:[w.jsxs(Y5,{children:[w.jsxs(X5,{children:[w.jsx(Z5,{children:w.jsx("img",{src:"/utp-logo.png",alt:"utp-logo",width:"100%",height:"100%"})}),w.jsx(J5,{children:"Encuentra a tu profesor perfecto"}),w.jsx(z5,{})]}),w.jsxs(eL,{children:[w.jsx("h3",{children:"Descubre más"}),w.jsx("a",{href:"#features-section",children:w.jsx("svg",{viewBox:"0 0 72 19",fill:"none",xmlns:"http://www.w3.org/2000/svg",height:"19px",width:"72px",cursor:"pointer",children:w.jsx("path",{d:"m1.571 5.256 30.793 12.3c.569.239 1.167.463 1.796.673.658.21 1.271.314 1.84.314.569 0 1.167-.105 1.795-.314.659-.21 1.287-.434 1.886-.674L70.429 5.256c.509-.21.898-.509 1.167-.898.27-.389.404-.793.404-1.212 0-.718-.24-1.316-.718-1.795-.479-.509-1.093-.763-1.84-.763-.36 0-.764.075-1.213.224-.448.15-.823.285-1.122.404L34.34 14.28h3.322L4.893 1.216c-.33-.12-.718-.254-1.167-.404A3.597 3.597 0 0 0 2.514.588c-.718 0-1.317.254-1.796.763C.24 1.83 0 2.428 0 3.146c0 .42.135.823.404 1.212.27.39.658.689 1.167.898Z",fill:"#AEAEB2"})})})]})]}),w.jsx(nL,{id:"features-section",children:"Features"}),w.jsxs(tL,{children:[w.jsx(Kc,{icon:w.jsx(Gc,{fontSize:"38px"}),title:"Rápidez",description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab accusantium amet cum debitis dolore, ducimus eveniet fuga."}),w.jsx(Kc,{icon:w.jsx(Gc,{fontSize:"38px"}),title:"Rápidez",description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab accusantium amet cum debitis dolore, ducimus eveniet fuga."}),w.jsx(Kc,{icon:w.jsx(Gc,{fontSize:"38px"}),title:"Rápidez",description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab accusantium amet cum debitis dolore, ducimus eveniet fuga."})]})]}),Y5=_.section`
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 `,X5=_.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
 `,Z5=_.div`
-    width: 130px;
-    height: 44px;
-    margin-bottom: 1.5rem;
-  
-    @media (min-width: 724px) {
-        width: 250px;
-        height: 85px
-    }
-`,J5=_.div`
-    font-size: 22px;
-    line-height: 1.5rem;
-    font-weight: 300;
-    text-align: center;
-    margin-bottom: 2rem;
-    width: 80%;
-`,eL=_.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  
-`,tL=_.section`
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    align-items: center;
-    justify-content: center;
-    padding-bottom: 32px;
+  width: 130px;
+  height: 44px;
+  margin-bottom: 1.5rem;
 
-    @media (min-width: 724px) {
-        flex-direction: row;
-    }
+  @media (min-width: 724px) {
+    width: 250px;
+    height: 85px
+  }
+`,J5=_.div`
+  font-size: 22px;
+  line-height: 1.5rem;
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: 2rem;
+  width: 80%;
+`,eL=_.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+`,tL=_.section`
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 32px;
+
+  @media (min-width: 724px) {
+    flex-direction: row;
+  }
 `,nL=_.div`
-    color: #F8F8F8;
-    text-align: center;
-    font-size: 32px;
-    line-height: 28px;
-    letter-spacing: 1px;
-    font-weight: bold;
-    margin-bottom: 32px;
+  color: #F8F8F8;
+  text-align: center;
+  font-size: 32px;
+  line-height: 28px;
+  letter-spacing: 1px;
+  font-weight: bold;
+  margin-bottom: 32px;
 `;function rL(e){return Ot({tag:"svg",attr:{viewBox:"0 0 24 24",strokeWidth:"2",stroke:"currentColor",fill:"none",strokeLinecap:"round",strokeLinejoin:"round"},child:[{tag:"path",attr:{stroke:"none",d:"M0 0h24v24H0z",fill:"none"}},{tag:"path",attr:{d:"M5 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"}},{tag:"path",attr:{d:"M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"}},{tag:"path",attr:{d:"M19 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"}},{tag:"path",attr:{d:"M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"}},{tag:"path",attr:{d:"M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"}},{tag:"path",attr:{d:"M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"}},{tag:"path",attr:{d:"M5 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"}},{tag:"path",attr:{d:"M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"}},{tag:"path",attr:{d:"M19 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"}}]})(e)}const iL=({text:e,width:t,height:n,fontSize:r,icon:i})=>w.jsxs(oL,{width:t,height:n,fontSize:r,children:[e,i&&i]}),oL=_.button`
     background: radial-gradient(
           circle at 0.2% 1.8%,
