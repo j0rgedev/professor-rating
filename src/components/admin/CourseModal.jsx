@@ -1,120 +1,101 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
-import { motion } from "framer-motion";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { newCourseSchema } from "../../setup/config/newCourseSchema.js";
-import { createCourse, updateCourse, deleteCourse } from "../../setup/api/courses.js";
+import {motion} from "framer-motion";
+import {ErrorMessage, Field, Form, Formik} from "formik";
+import {newCourseSchema} from "../../setup/config/newCourseSchema.js";
+import {createCourse, updateCourse, deleteCourse} from "../../setup/api/courses.js";
+import {useMutation} from "react-query";
+import toast from "react-hot-toast";
 
-const CourseModal = ({ modalState, modalStateSetter, _course, isFromRow }) => {
-  const [course, setCourse] = useState({ code: _course.code, name: _course.name });
+const CourseModal = ({modalState, modalStateSetter, _course, isFromRow}) => {
+	const [course, setCourse] = useState({code: _course.code, name: _course.name});
+	let toastId = null;
 
-  const handleCodeChange = (event) => {
-    setCourse({
-      ...course,
-      code: event.target.value,
-    });
-  };
+	const {isLoading: isUpdateMutationLoading ,mutateAsync: updateMutation} = useMutation({
+		mutationFn: updateCourse,
+		onSuccess: () => {
+			toast.success("Curso actualizado", {id: toastId});
+		},
+		onError: () => {
+			toast.error("Error al actualizar", {id: toastId});
+		},
+	})
 
-  const handleNameChange = (event) => {
-    setCourse({
-      ...course,
-      name: event.target.value,
-    });
-  };
+	const onSubmit = async (values) => {
+		if (isFromRow) {
+		  await updateMutation(values.code, values.name)
+			toastId = toast.loading("Actualizando curso...");
+		  modalStateSetter(false);
+		}
+	};
 
-  const onSubmit = async () => {
-    console.log(course);
+	if (!modalState) return null
 
-    if (isFromRow) {
-      await updateCourse(_course._id, course);
-      modalStateSetter(false);
-      return;
-    }
-
-    await createCourse(course);
-    setCourse({ code: "", name: "" });
-    modalStateSetter(false);
-  };
-
-  const onDeletion = async () => {
-    console.log(_course._id);
-    await deleteCourse(_course._id);
-    modalStateSetter(false);
-  };
-
-  if (!modalState) {
-    return null;
-  }
-
-  return (
-    <Backdrop>
-      <ModalContainer
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
-        transition={{ duration: 0.3 }}
-      >
-        <ModalHeader>Nuevo Curso</ModalHeader>
-        <Formik
-          initialValues={course}
-          enableReinitialize={true}
-          validationSchema={newCourseSchema}
-          onSubmit={onSubmit}
-        >
-          {({ values, errors, touched, isSubmitting }) => (
-            <CustomForm>
-              <ModalContent>
-                <Input
-                  type="text"
-                  placeholder="Codigo"
-                  name={"code"}
-                  onChange={handleCodeChange}
-                  value={values.code}
-                />
-                {touched.code && errors.code && <ErrorMessage name="code" />}
-                <Input
-                  type="text"
-                  placeholder="Nombre"
-                  name={"name"}
-                  onChange={handleNameChange}
-                  value={values.name}
-                />
-                {touched.name && errors.name && <ErrorMessage name="name" />}
-              </ModalContent>
-              <ModalFooter>
-                <StyledButton
-                  main={false}
-                  type={"button"}
-                  onClick={() => {
-                    if (!isFromRow) {
-                      setCourse({ code: "", name: "" });
-                    }
-                    modalStateSetter(false);
-                  }}
-                >
-                  Cancelar
-                </StyledButton>
-                {isFromRow ? (
-                  <StyledButton
-                    main={true}
-                    type={"button"}
-                    onClick={() => {
-                      onDeletion();
-                    }}
-                  >
-                    Eliminar
-                  </StyledButton>
-                ) : null}
-                <StyledButton main={true} type={"submit"} disabled={isSubmitting}>
-                  {isFromRow ? "Actualizar" : "Agregar"}
-                </StyledButton>
-              </ModalFooter>
-            </CustomForm>
-          )}
-        </Formik>
-      </ModalContainer>
-    </Backdrop>
-  );
+	return (
+		<Backdrop>
+			<ModalContainer
+				initial={{opacity: 0, scale: 0.8}}
+				animate={{opacity: 1, scale: 1}}
+				exit={{opacity: 0, scale: 0.8}}
+				transition={{duration: 0.3}}
+			>
+				<ModalHeader>Nuevo Curso</ModalHeader>
+				<Formik
+					initialValues={course}
+					validationSchema={newCourseSchema}
+					onSubmit={onSubmit}
+				>
+					{({values, errors, touched, handleChange, handleBlur}) => (
+						<CustomForm>
+							<ModalContent>
+								<InputWrapper>
+									<Input
+										type="text"
+										placeholder="Codigo"
+										name={"code"}
+										onChange={handleChange}
+										onBlur={handleBlur}
+										value={values.code}
+										className={touched.code && errors.code ? "error" : null}
+									/>
+									{touched.code && errors.code && <p>{errors.code}</p>}
+								</InputWrapper>
+								<InputWrapper>
+									<Input
+										type="text"
+										placeholder="Nombre"
+										name={"name"}
+										onChange={handleChange}
+										onBlur={handleBlur}
+										value={values.name}
+										className={touched.name && errors.name ? "error" : null}
+									/>
+									{touched.name && errors.name && <p>{errors.name}</p>}
+								</InputWrapper>
+							</ModalContent>
+							<ModalFooter>
+								<StyledButton
+									main={false}
+									type={"button"}
+									onClick={() => {
+										if (!isFromRow) {
+											setCourse({code: "", name: ""});
+										}
+										modalStateSetter(false);
+									}}
+								>
+									Cancelar
+								</StyledButton>
+								<StyledButton main={true} type={"submit"} disabled={isUpdateMutationLoading}>
+									{isFromRow ? "Actualizar" : "Agregar"}
+								</StyledButton>
+							</ModalFooter>
+						</CustomForm>
+					)}
+				</Formik>
+			</ModalContainer>
+		</Backdrop>
+	);
 };
 
 const Backdrop = styled.div`
@@ -136,7 +117,8 @@ const ModalContainer = styled(motion.div)`
   background-color: #1e1e1e;
   width: 550px;
   min-height: 220px;
-  max-height: 80%;
+  max-height: 200px;
+	height: 100%;
   overflow-y: auto;
   padding: 20px;
   border-radius: 8px;
@@ -165,22 +147,25 @@ const CustomForm = styled(Form)`
   display: flex;
   flex-direction: column;
   gap: 16px;
+	height: 100%;
 `;
 
-const CoursesOptions = styled.div`
+
+const InputWrapper = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 4px;
-  width: 100%;
-`;
 
-const CourseCourses = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  justify-content: start;
-  margin: 24px 0;
+  input {
+    width: 220px;
+    font-size: 18px;
+  }
+
+  p {
+    margin: 0;
+    color: #ff0000;
+    font-size: 14px;
+  }
 `;
 
 const Input = styled(Field)`
@@ -189,58 +174,11 @@ const Input = styled(Field)`
   background-color: transparent;
   color: #ffffff;
   padding: 4px;
-  margin-bottom: 10px;
   outline: none;
-`;
 
-const CourseSelect = styled(Field)`
-  border: none;
-  width: 220px;
-  border-bottom: 1px solid #ffffff;
-  background-color: transparent;
-  color: #ffffff;
-  padding: 4px;
-  font-size: 18px;
-
-  option {
-    color: #000000;
+  &.error {
+    border-bottom: 1px solid #ff0000;
   }
-`;
-
-const CourseContainer = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #2e2e2e;
-  min-width: 100px;
-  padding: 8px 12px;
-  border-radius: 20px;
-  max-width: 220px;
-`;
-
-const CourseInfo = styled.div`
-  flex-grow: 1;
-  color: #ffffff;
-  margin-right: 8px;
-  font-size: 0.8rem;
-`;
-
-const RemoveCourseButton = styled.button`
-  display: flex;
-  background-color: transparent;
-  border: none;
-  color: #ffffff;
-  cursor: pointer;
-`;
-
-const AddCourseButton = styled.button`
-  display: flex;
-  align-items: center;
-  background-color: transparent;
-  border: none;
-  color: #ffffff;
-  cursor: pointer;
-  padding: 4px;
-  font-size: 20px;
 `;
 
 const ModalFooter = styled.div`

@@ -1,44 +1,77 @@
-import { useState } from "react";
+import {useState} from "react";
 import styled from "styled-components";
-import { AiFillEdit } from "react-icons/ai";
+import {AiFillDelete, AiFillEdit} from "react-icons/ai";
 import TeacherModal from "../../components/admin/TeacherModal.jsx";
+import {DeleteModal} from "./DeleteModal.jsx";
 
-const TeachersRow = ({ number, teacher, isActive }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(teacher);
-  return (
-    <Row>
-      <TeacherModal
-        modalState={isModalOpen}
-        modalStateSetter={setIsModalOpen}
-        _teacher={teacher}
-        isFromRow={true}
-      />
-      <Number>{number}</Number>
-      <ImageAndName>
-        <TeacherImage src={teacher.picture} alt="img" />
-        <TeacherName>{`${teacher.lastName}, ${teacher.firstName}`}</TeacherName>
-      </ImageAndName>
-      <Courses>
-        {teacher.courses.slice(0, 2).map((course, index) => (
-          <div key={index}>
-            <Course>{course.name}</Course>
-          </div>
-        ))}
-        {teacher.courses.length > 3 && <Course>+{teacher.courses.length - 2}</Course>}
-      </Courses>
-      <Verification isActive={isActive}>{isActive ? "Verificado" : "Sin verificar"}</Verification>
-      <Actions>
-        <DeleteButton
-          onClick={() => {
-            setIsModalOpen(true);
-          }}
-        >
-          <AiFillEdit />
-        </DeleteButton>
-      </Actions>
-    </Row>
-  );
+const TeachersRow = ({number, teacher, isActive}) => {
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+	const [editedTeacher, setEditedTeacher] = useState(null);
+
+	return (
+		<Row>
+			{
+				isModalOpen && (
+					<TeacherModal
+						modalState={isModalOpen}
+						modalStateSetter={setIsModalOpen}
+						_teacher={editedTeacher}
+						isFromRow={true}
+					/>
+				)
+			}
+			{
+				isDeleteModalOpen && (
+					<DeleteModal
+						modalState={isDeleteModalOpen}
+						modalStateSetter={setIsDeleteModalOpen}
+						data={teacher}
+						title="Eliminar profesor"
+						description="¿Estás seguro de que deseas eliminar a este profesor?"
+					/>
+				)
+			}
+			<Number>{number}</Number>
+			<ImageAndName>
+				<TeacherImage src={teacher.picture} alt="img"/>
+				<TeacherName>{`${teacher.lastName}, ${teacher.firstName}`}</TeacherName>
+			</ImageAndName>
+			<Courses>
+				{teacher.courses.length === 0 ? (
+					<Course>Sin cursos</Course>
+				) : (
+					<>
+						{teacher.courses.slice(0, 2).map((course, index) => (
+							<div key={index}>
+								<Course>{course.name}</Course>
+							</div>
+						))}
+						{teacher.courses.length > 3 && (
+							<Course>+{teacher.courses.length - 2}</Course>
+						)}
+					</>
+				)}
+			</Courses>
+			<Verification isActive={isActive}>{isActive ? "Verificado" : "Sin verificar"}</Verification>
+			<Actions>
+				<EditButton
+					onClick={() => {
+						setIsModalOpen(true);
+						setEditedTeacher(teacher);
+					}}
+				>
+					<AiFillEdit/>
+				</EditButton>
+				<DeleteButton onClick={() => {
+					setIsDeleteModalOpen(true);
+					setEditedTeacher(teacher);
+				}}>
+					<AiFillDelete/>
+				</DeleteButton>
+			</Actions>
+		</Row>
+	);
 };
 
 const Row = styled.div`
@@ -102,8 +135,8 @@ const Verification = styled.div`
   height: 100%;
   padding: 6px 12px;
   border-radius: 4px;
-  background-color: ${({ isActive }) => (isActive ? "#143FF6" : "transparent")};
-  border: ${({ isActive }) => (isActive ? "none" : "1px solid #ffffff")};
+  background-color: ${({isActive}) => (isActive ? "#143FF6" : "transparent")};
+  border: ${({isActive}) => (isActive ? "none" : "1px solid #ffffff")};
 `;
 
 const Actions = styled.div`
@@ -112,40 +145,34 @@ const Actions = styled.div`
   height: 100%;
 `;
 
-const DetailsButton = styled.button`
-  font-size: 16px;
-  height: 100%;
-  width: 38px;
+const ActionButton = styled.button`
+	font-size: 16px;
+	color: white;
+	height: 100%;
+	width: 38px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: none;
+	cursor: pointer;
+	transition: background-color 0.2s ease-in-out;
+`
+
+const EditButton = styled(ActionButton)`
   background-color: #c59538;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  cursor: pointer;
 
   &:hover {
-    background-color: #a1762a;
+    background-color: #8c6a28;
   }
 `;
 
-const DeleteButton = styled.button`
-  font-size: 16px;
-  background-color: #ce2525;
-  color: white;
-  height: 100%;
-  width: 38px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  cursor: pointer;
+const DeleteButton = styled(ActionButton)`
+	background-color: #c53838;
 
-  &:hover {
-    background-color: #811c1c;
-  }
+	&:hover {
+		background-color: #8c2828;
+	}
 `;
 
 export default TeachersRow;

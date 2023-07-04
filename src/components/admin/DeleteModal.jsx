@@ -1,15 +1,9 @@
 import styled from "styled-components";
 import {motion} from "framer-motion";
-import {useContext} from "react";
-import {TeacherModalContext} from "../../setup/config/TeacherModalContext.jsx";
 
-export function DeleteModal({title, description}) {
+export function DeleteModal({modalState, modalStateSetter, data, title, description}) {
 
-	const {setDeleteModalInfo} = useContext(TeacherModalContext)
-
-	const handleClose = () => {
-		setDeleteModalInfo(null)
-	}
+	if(!modalState) return null
 
 	return (
 		<Background>
@@ -24,7 +18,7 @@ export function DeleteModal({title, description}) {
 					<p>{description}</p>
 				</MainInfo>
 				<Buttons>
-					<Button isMain={false} onClick={handleClose}>Cancelar</Button>
+					<Button isMain={false} onClick={() => {modalStateSetter(false)}}>Cancelar</Button>
 					<Button isMain={true}>Eliminar</Button>
 				</Buttons>
 			</Container>
@@ -33,21 +27,22 @@ export function DeleteModal({title, description}) {
 }
 
 const Background = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  backdrop-filter: blur(1px);
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  position: fixed;
-  z-index: 1000;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(1px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 const Container = styled(motion.div)`
   width: 85%;
-  max-width: 650px;
-  height: 35%;
+  max-width: 550px;
+  height: 30%;
   background: white;
   display: flex;
   flex-direction: column;
@@ -77,7 +72,7 @@ const Buttons = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 25%;
+  height: 28%;
   padding: .9rem 3rem;
   background-color: #2F2F2F;
 `

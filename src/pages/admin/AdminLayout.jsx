@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { AiOutlineUser, AiOutlineBook, AiOutlineComment } from "react-icons/ai";
+import {Toaster} from "react-hot-toast";
 
 export function AdminLayout() {
   const location = useLocation();
@@ -12,6 +13,13 @@ export function AdminLayout() {
 
   return (
     <Container>
+      <Toaster toastOptions={{
+        style: {
+          borderRadius: '10px',
+          background: '#333',
+          color: '#fff',
+        },
+      }}/>
       <Aside>
         <h1>Admin</h1>
         <ul>

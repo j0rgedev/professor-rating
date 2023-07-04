@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { FaCommentAlt, FaUserAlt, FaChalkboardTeacher, FaStar } from "react-icons/fa";
-import { BsFillBookFill } from "react-icons/bs";
-import { useState } from "react";
+import {FaCommentAlt, FaUserAlt, FaChalkboardTeacher, FaStar} from "react-icons/fa";
+import {BsFillBookFill} from "react-icons/bs";
+import {useState} from "react";
 
-export function CommentRow({ isNew, commentText}) {
+export function CommentRow({isNew, commentText}) {
 	const [expanded, setExpanded] = useState(false);
 	const MAX_HEIGHT = 320;
 
@@ -18,28 +18,28 @@ export function CommentRow({ isNew, commentText}) {
 			<Top>
 				<CommentsInfo>
 					<Info>
-						<FaCommentAlt />
+						<FaCommentAlt/>
 						<InfoText>C202012</InfoText>
 					</Info>
 					<Info>
-						<FaUserAlt />
+						<FaUserAlt/>
 						<InfoText>Anónimo</InfoText>
 					</Info>
 					<Info>
-						<FaChalkboardTeacher />
+						<FaChalkboardTeacher/>
 						<InfoText>Edwin Palomino</InfoText>
 					</Info>
 					<Info>
-						<BsFillBookFill />
+						<BsFillBookFill/>
 						<InfoText>Matemáticas 1</InfoText>
 					</Info>
 				</CommentsInfo>
 				<Stars>
-					<StarIcon />
-					<StarIcon />
-					<StarIcon />
-					<StarIcon />
-					<StarIcon />
+					<StarIcon/>
+					<StarIcon/>
+					<StarIcon/>
+					<StarIcon/>
+					<StarIcon/>
 					<Score>5</Score>
 				</Stars>
 			</Top>
@@ -145,8 +145,8 @@ const Content = styled.div`
 
 const Comment = styled.div`
   overflow: hidden;
-  text-overflow: ${({ expanded }) => (expanded ? "unset" : "ellipsis")};
-  height: ${({ expanded }) => (expanded ? "auto" : `unset`)};
+  text-overflow: ${({expanded}) => (expanded ? "unset" : "ellipsis")};
+  height: ${({expanded}) => (expanded ? "auto" : `unset`)};
   transition: height 0.3s ease-in-out;
   text-align: justify;
   width: 80%;

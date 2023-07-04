@@ -6,40 +6,24 @@ import TeachersRow from "../../components/admin/TeachersRow.jsx";
 import TeacherModal from "../../components/admin/TeacherModal.jsx";
 import { getTeachers } from "../../setup/api/teachers.js";
 import { getCoursesByTeacher } from "../../setup/api/courses.js";
+import {useQuery} from "react-query";
 
 export function Teachers() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [teachers, setTeachers] = useState([]);
   const [teacherToSearch, setTeacherToSearch] = useState("");
-  const [teachersCourses, setTeachersCourses] = useState([]);
 
-  useEffect(() => {
-    if (teacherToSearch === "") {
-      getTeachers().then(async (data) => {
-        await Promise.all(
-          data.map(async (teacher) => {
-            const courses = await getCoursesByTeacher(teacher._id);
-            return courses;
-          })
-        ).then((results) => {
-          setTeachersCourses(results);
-          setTeachers(data);
-        });
-      });
-      return;
-    }
-    getTeachersByName(teacherToSearch).then(async (data) => {
-      await Promise.all(
-        data.map(async (teacher) => {
-          const courses = await getCoursesByTeacher(teacher._id);
-          return courses;
-        })
-      ).then((results) => {
-        setTeachersCourses(results);
-        setTeachers(data);
-      });
-    });
-  }, [isModalOpen, teacherToSearch]);
+  const {data: teachers, isLoading: areTeachersLoading} = useQuery({
+    queryKey: ['teachers'],
+    queryFn: getTeachers,
+  })
+
+  const {data: teachersCourses, isLoading: areTeachersCoursesLoading} = useQuery({
+    queryKey: ['teachersCourses'],
+    queryFn: () => Promise.all(teachers.map(async (teacher) => {
+      return await getCoursesByTeacher(teacher._id);
+    })),
+    enabled: !!teachers,
+  })
 
   return (
     <>
@@ -65,17 +49,20 @@ export function Teachers() {
         </CustomButton>
       </HeaderSection>
       <TeachersTable>
-        {teachers.map((teacher, index) => {
-          return (
-            <div key={teacher._id}>
+        {areTeachersLoading || areTeachersCoursesLoading ? (
+          <h1>Cargando...</h1>
+        ) : (
+          teachers.map((teacher, index) => {
+            return (
               <TeachersRow
                 number={index + 1}
-                teacher={{ ...teacher, courses: teachersCourses[index] }}
+                key={teacher._id}
+                teacher={{...teacher, courses: teachersCourses[index]}}
                 isActive={false}
               />
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </TeachersTable>
     </>
   );

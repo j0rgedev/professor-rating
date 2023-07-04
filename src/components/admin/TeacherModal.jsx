@@ -7,89 +7,33 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { newTeacherSchema } from "../../setup/config/newTeacherSchema.js";
 import { getCourses, addTeacherToCourse } from "../../setup/api/courses.js";
 import { createTeacher, updateTeacher } from "../../setup/api/teachers.js";
+import {useQuery} from "react-query";
+import CustomSelect from "./CustomSelect.jsx";
 
-const TeacherModal = ({ modalState, modalStateSetter, _teacher, isFromRow }) => {
+const TeacherModal = ({ modalState, modalStateSetter, _teacher, isFromRow = false }) => {
   const [teacher, setTeacher] = useState({
     firstName: _teacher.firstName,
     lastName: _teacher.lastName,
-    courses: _teacher.courses ? _teacher.courses.map((obj) => obj.name) : [],
-    coursesId: _teacher.courses ? _teacher.courses.map((obj) => obj._id) : [],
+    courses: _teacher.courses ? _teacher.courses.map((obj) => obj.name) : []
   });
+  const [coursesOptions, setCoursesOptions] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedCourseId, setSelectedCourseId] = useState("");
-  const [courses, setCourses] = useState([]);
 
-  useEffect(() => {
-    getCourses().then((data) => {
-      setCourses(data);
-    });
-  }, []);
-
-  const handleAddCourse = () => {
-    setTeacher({
-      ...teacher,
-      courses: [...teacher.courses, selectedCourse],
-      coursesId: [...teacher.coursesId, selectedCourseId],
-    });
-    setSelectedCourse("");
-  };
-
-  const handleCourseChange = (e) => {
-    let optionElement = e.target.childNodes[e.target.selectedIndex];
-    let id = optionElement.getAttribute("id");
-    setSelectedCourseId(id);
-    setSelectedCourse(e.target.value);
-  };
-
-  const handleFirstNameChange = (e) => {
-    setTeacher({
-      ...teacher,
-      firstName: e.target.value,
-    });
-  };
-
-  const handleLastNameChange = (e) => {
-    setTeacher({
-      ...teacher,
-      lastName: e.target.value,
-    });
-  };
-
-  const handleRemoveCourse = (index) => {
-    const updatedCourses = [...teacher.courses];
-    const updatedCoursesId = [...teacher.coursesId];
-    updatedCourses.splice(index, 1);
-    updatedCoursesId.splice(index, 1);
-    setTeacher({
-      ...teacher,
-      courses: updatedCourses,
-      coursesId: updatedCoursesId,
-    });
-  };
-
-  const onSubmit = async () => {
-    console.log(teacher);
-
-    let teacherData = {
-      firstName: teacher.firstName,
-      lastName: teacher.lastName,
-      picture: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-    };
-
-    if (isFromRow) {
-      await updateTeacher(_teacher._id, teacherData);
-      modalStateSetter(false);
-      return;
+  useQuery({
+    queryKey: ["courses"],
+    queryFn: getCourses,
+    onSuccess: (data) => {
+      setCoursesOptions(data.map((course) => ({
+        label: course.name,
+        value: course._id
+      })));
     }
+  });
 
-    createTeacher(teacherData).then((data) => {
-      console.log(data);
-      teacher.coursesId.forEach((courseId) => {
-        addTeacherToCourse(courseId, data._id);
-      });
-      setTeacher({ firstName: "", lastName: "", courses: [], coursesId: [] });
-      modalStateSetter(false);
-    });
+  const onSubmit = async (values) => {
+    console.log(teacher);
+    console.log(values)
   };
 
   if (!modalState) {
@@ -107,94 +51,77 @@ const TeacherModal = ({ modalState, modalStateSetter, _teacher, isFromRow }) => 
         <ModalHeader>{isFromRow ? "Actualizar" : "Nuevo"} Profesor</ModalHeader>
         <Formik
           initialValues={teacher}
-          enableReinitialize={true}
           validationSchema={newTeacherSchema}
           onSubmit={onSubmit}
         >
-          {({ values, errors, touched, isSubmitting }) => (
+          {({ values, errors, touched, isSubmitting, handleBlur, handleChange }) => (
             <CustomForm>
               <ModalContent>
-                <Input
-                  type="text"
-                  placeholder="Nombres"
-                  name="firstName"
-                  onChange={handleFirstNameChange}
-                  value={values.firstName}
-                />
-                {touched.firstName && errors.firstName && <ErrorMessage name="firstName" />}
-                <Input
-                  type="text"
-                  placeholder="Apellidos"
-                  name="lastName"
-                  onChange={handleLastNameChange}
-                  value={values.lastName}
-                />
-                {touched.lastName && errors.lastName && <ErrorMessage name="lastName" />}
-                <CoursesOptions>
-                  <CourseSelect
-                    as={"select"}
-                    value={selectedCourse}
-                    onChange={handleCourseChange}
-                    name={"courses"}
-                  >
-                    <option key="0" value="" disabled={true}>
-                      Seleccionar curso
-                    </option>
-                    {courses.map((course, index) => {
-                      return (
-                        <option key={index + 1} id={course._id} value={course.name}>
-                          {course.name}
-                        </option>
-                      );
-                    })}
-                  </CourseSelect>
-                  <AddCourseButton
-                    onClick={() => {
-                      handleAddCourse();
-                    }}
-                    disabled={!selectedCourse}
-                  >
-                    <BsPatchPlusFill />
-                  </AddCourseButton>
-                </CoursesOptions>
-                {touched.courses && errors.courses && <ErrorMessage name="courses" />}
+                <InputWrapper>
+                  <Input
+                    type="text"
+                    placeholder="Nombres"
+                    name="firstName"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.firstName}
+                    className={touched.firstName && errors.firstName ? "error" : null}
+                  />
+                  {touched.firstName && errors.firstName && <p>{errors.firstName}</p>}
+                </InputWrapper>
+                <InputWrapper>
+                  <Input
+                    type="text"
+                    placeholder="Apellidos"
+                    name="lastName"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.lastName}
+                    className={touched.lastName && errors.lastName ? "error" : null}
+                  />
+                  {touched.lastName && errors.lastName && <p>{errors.lastName}</p>}
+                </InputWrapper>
+                <InputWrapper isLast={true}>
+                  {
+                    teacher && (
+                      <Field
+                        name={"courses"}
+                        initialValues={values.courses}
+                        options={coursesOptions}
+                        component={CustomSelect}
+                        placeholder={"Seleccionar curso"}
+                        isMulti={true}
+                        className={touched.courses && errors.courses ? "error" : null}
+                      />
+                    )
+                  }
+                </InputWrapper>
               </ModalContent>
-              <TeacherCourses>
-                {teacher.courses.map((course, index) => (
-                  <CourseContainer key={index}>
-                    <CourseInfo>{course}</CourseInfo>
-                    <RemoveCourseButton
-                      onClick={() => {
-                        handleRemoveCourse(index);
-                      }}
-                    >
-                      <AiOutlineClose />
-                    </RemoveCourseButton>
-                  </CourseContainer>
-                ))}
-              </TeacherCourses>
+              {/*<TeacherCourses>*/}
+              {/*  {teacher.courses.map((course, index) => (*/}
+              {/*    <CourseContainer key={index}>*/}
+              {/*      <CourseInfo>{course}</CourseInfo>*/}
+              {/*      <RemoveCourseButton*/}
+              {/*        onClick={() => {*/}
+              {/*          handleRemoveCourse(index);*/}
+              {/*        }}*/}
+              {/*      >*/}
+              {/*        <AiOutlineClose />*/}
+              {/*      </RemoveCourseButton>*/}
+              {/*    </CourseContainer>*/}
+              {/*  ))}*/}
+              {/*</TeacherCourses>*/}
               <ModalFooter>
                 <StyledButton
                   main={false}
                   type={"button"}
                   onClick={() => {
-                    setTeacher({ firstName: "", lastName: "", courses: [], coursesId: [] });
+                    setTeacher({ firstName: "", lastName: "", courses: []});
                     modalStateSetter(false);
                   }}
                 >
                   Cancelar
                 </StyledButton>
-                {isFromRow ? (
-                  <StyledButton
-                    main={true}
-                    type={"button"}
-                    onClick={() => {
-                      onDeletion();
-                    }}
-                  >
-                    Eliminar
-                  </StyledButton>
-                ) : null}
                 <StyledButton main={true} type={"submit"} disabled={isSubmitting}>
                   {isFromRow ? "Actualizar" : "Agregar"}
                 </StyledButton>
@@ -244,10 +171,23 @@ const ModalContent = styled.div`
   flex-wrap: wrap;
   gap: 16px;
   justify-content: space-between;
+`;
+
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: ${(props) => (props.isLast ? "1" : "0")};
 
   input {
     width: 220px;
     font-size: 18px;
+  }
+
+  p {
+    margin: 0;
+    color: #ff0000;
+    font-size: 14px;
   }
 `;
 
@@ -255,6 +195,7 @@ const CustomForm = styled(Form)`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  flex: 1;
 `;
 
 const CoursesOptions = styled.div`
@@ -279,32 +220,12 @@ const Input = styled(Field)`
   background-color: transparent;
   color: #ffffff;
   padding: 4px;
-  margin-bottom: 10px;
+  margin-bottom: 4px;
   outline: none;
-`;
-
-const CourseSelect = styled(Field)`
-  border: none;
-  width: 220px;
-  border-bottom: 1px solid #ffffff;
-  background-color: transparent;
-  color: #ffffff;
-  padding: 4px;
-  font-size: 18px;
-
-  option {
-    color: #000000;
+  
+  &.error {
+    border-bottom: 1px solid #ff0000;
   }
-`;
-
-const CourseContainer = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #2e2e2e;
-  min-width: 100px;
-  padding: 8px 12px;
-  border-radius: 20px;
-  max-width: 220px;
 `;
 
 const CourseInfo = styled.div`
