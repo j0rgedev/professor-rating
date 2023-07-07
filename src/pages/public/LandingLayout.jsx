@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import {Outlet} from "react-router-dom";
 import {TbGridDots} from "react-icons/tb";
-import {Button} from "../components/Button.jsx";
-import {Footer} from "../components/Footer.jsx";
+import {Button} from "../../components/Button.jsx";
+import {Footer} from "../../components/Footer.jsx";
 export function LandingLayout() {
 	return (
 		<Container>
@@ -28,10 +28,10 @@ const CustomHeader = styled.header`
 `
 
 const Container = styled.div`
-  	min-height: 100vh;
-	width: 100%;
-	height: 100%;
-	background-color: #202024;
+  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+  background-color: #202024;
 `
 
 const Main = styled.main`

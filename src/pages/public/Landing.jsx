@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import {SearchInput} from "../components/SearchInput.jsx";
-import {InfoCard} from "../components/InfoCard.jsx";
+import {SearchInput} from "../../components/SearchInput.jsx";
+import {InfoCard} from "../../components/InfoCard.jsx";
 import {BiTimer} from "react-icons/bi";
 
 export const Landing = () => {
@@ -9,7 +9,7 @@ export const Landing = () => {
 			<MainSection>
 				<SearchContainer>
 					<ImageWrapper>
-						<img src="/utp-logo.png" alt="utp-logo" width={'100%'} height={'100%'}/>
+						<img src="/public/utp-logo.png" alt="utp-logo" width={'100%'} height={'100%'}/>
 					</ImageWrapper>
 					<SearchDescription>Encuentra a tu profesor perfecto</SearchDescription>
 					<SearchInput/>
@@ -49,20 +49,22 @@ export const Landing = () => {
 }
 
 const MainSection = styled.section`
-  height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  height: 100vh;
+  position: relative;
   align-items: center;
 `
 
 const SearchContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
+  height: 100%;
   max-width: 900px;
+  padding-top: 10%;
+	margin: 0 auto;
 `
 
 const ImageWrapper = styled.div`
@@ -89,7 +91,10 @@ const ArrowWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 100px;
 `
 
 const CardsSection = styled.section`
@@ -106,6 +111,7 @@ const CardsSection = styled.section`
 `
 
 const CardsSectionTitle = styled.div`
+	padding-top: 3rem;
   color: #F8F8F8;
   text-align: center;
   font-size: 32px;

@@ -1,32 +1,34 @@
 import styled from 'styled-components'
+import {useNavigate} from "react-router-dom";
+import {Rating} from "@smastrom/react-rating";
+import '@smastrom/react-rating/style.css';
 
-export function TeacherRow() {
+export function TeacherRow(teacher) {
 
-	const handleClick = () => {
-		console.log('click')
-	}
-
+	const navigate = useNavigate();
 
 	return (
-		<Wrapper onClick={handleClick}>
+		<Wrapper onClick={() => {
+			navigate(`/profesores/${teacher.teacher._id}`)
+		}}>
 			<Top>
 				<Verification isVerified={true}>
-					{true ? 'Verificado' : 'No verificado'}
+					{'Verificado'}
 				</Verification>
 			</Top>
 			<Image>
 				<img src="https://news.iu.edu/live/image/gid/2/715_62cd8be92bbf8_element_12_f2f9513fbe0736fdc26f0b57467ff162-1164-head20shot-Edited.jpg" alt="teacher_photo" />
 			</Image>
 			<TeacherInfo>
-				<p className={'teacher-names'}>Nombres Apellidos</p>
+				<p className={'teacher-names'}>{`${teacher.teacher.firstName} ${teacher.teacher.lastName}`}</p>
 				<p className={'teacher-major'}>Maestro</p>
 			</TeacherInfo>
 			<Stars>
-				<Star />
-				<Star />
-				<Star />
-				<Star />
-				<Star />
+				<Rating
+					style={{maxWidth: '80%'}}
+					value={3.4}
+					readOnly
+				/>
 			</Stars>
 		</Wrapper>
 	)
@@ -64,6 +66,7 @@ const Verification = styled.div`
   padding: 1px 8px;
   border-radius: 6px;
 `
+
 const Image = styled.div`
   display: flex;
   justify-content: center;
@@ -107,23 +110,6 @@ const Stars = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`
-
-const Star = styled.span`
-  width: 35px;
-  height: 35px;
-  background-color: #FFAE4F;
-  margin: 0 2px;
-  clip-path: polygon(50% 0%,
-  63% 38%,
-  100% 38%,
-  69% 59%,
-  82% 100%,
-  50% 75%,
-  18% 100%,
-  31% 59%,
-  0% 38%,
-  37% 38%);
 `
 
 export default TeacherRow;
