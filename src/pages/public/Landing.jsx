@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import {SearchInput} from "../../components/SearchInput.jsx";
-import {InfoCard} from "../../components/InfoCard.jsx";
+import {SearchInput} from "../../components/public/SearchInput.jsx";
+import {InfoCard} from "../../components/public/InfoCard.jsx";
 import {BiTimer} from "react-icons/bi";
 
 export const Landing = () => {

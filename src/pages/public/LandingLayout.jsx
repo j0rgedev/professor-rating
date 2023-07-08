@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import {Outlet} from "react-router-dom";
 import {TbGridDots} from "react-icons/tb";
-import {Button} from "../../components/Button.jsx";
-import {Footer} from "../../components/Footer.jsx";
+import {Button} from "../../components/public/Button.jsx";
+import {Footer} from "../../components/public/Footer.jsx";
 export function LandingLayout() {
 	return (
 		<Container>

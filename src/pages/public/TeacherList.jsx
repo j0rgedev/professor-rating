@@ -1,4 +1,4 @@
-import {TeacherRow} from "../../components/TeacherRow.jsx";
+import {TeacherRow} from "../../components/public/TeacherRow.jsx";
 import styled from "styled-components";
 import {useQuery} from "react-query";
 import {getTeachers} from "../../setup/api/teachers.js";

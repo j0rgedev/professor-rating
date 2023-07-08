@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import {Rating} from "@smastrom/react-rating";
 import '@smastrom/react-rating/style.css';
 import {useState} from "react";
+import {TeacherComment} from "../../components/public/TeacherComment.jsx";
 
 export function TeacherProfile() {
 	const [showGeneralSection, setShowGeneralSection] = useState(true);
@@ -30,48 +31,72 @@ export function TeacherProfile() {
 					<a href="#">Mira su trayectoria</a>
 				</TeacherTrajectory>
 			</TeacherInfo>
-			<Sections>
-				<Section isActive={showGeneralSection} onClick={handleGeneralClick}>
-					General
-				</Section>
-				<Section isActive={showReviewSection} onClick={handleReviewClick}>
-					Reseñas
-				</Section>
-			</Sections>
-			<GeneralSection>
-				<MainReview>
-					<p>Calificación general</p>
-					<h1>4.0</h1>
-					<Rating style={{maxWidth: '80%'}} value={4.0} readOnly/>
-					<p>Basado en 15 reviews</p>
-				</MainReview>
-				<ReviewProgress>
-					<ProgressRow>
-						<ProgressScale>Excelente</ProgressScale>
-						<ProgressBar color="#4EAD52" progress={80} />
-					</ProgressRow>
-					<ProgressRow>
-						<ProgressScale>Bueno</ProgressScale>
-						<ProgressBar color="#A5D431" progress={60} />
-					</ProgressRow>
-					<ProgressRow>
-						<ProgressScale>Normal</ProgressScale>
-						<ProgressBar color="#F7E642" progress={40} />
-					</ProgressRow>
-					<ProgressRow>
-						<ProgressScale>Deficiente</ProgressScale>
-						<ProgressBar color="#FDAA2C" progress={20} />
-					</ProgressRow>
-					<ProgressRow>
-						<ProgressScale>Malo</ProgressScale>
-						<ProgressBar color="#EE3A19" progress={10} />
-					</ProgressRow>
-				</ReviewProgress>
-				<TeacherTrajectory isDesktop={false}>
-					<p>¿Interesado en este profesor?</p>
-					<a href="#">Mira su trayectoria</a>
-				</TeacherTrajectory>
-			</GeneralSection>
+			<MainInfo>
+				<Sections>
+					<Section isActive={showGeneralSection} onClick={handleGeneralClick}>
+						General
+					</Section>
+					<Section isActive={showReviewSection} onClick={handleReviewClick}>
+						Reseñas
+					</Section>
+				</Sections>
+				{
+					showGeneralSection ? (
+						<GeneralSection>
+							<MainReview>
+								<div className={'title'}>Calificación general</div>
+								<div className={'rating'}>4.0</div>
+								<Rating value={4.0} readOnly/>
+								<div className={'description'}>Basado en 15 reviews</div>
+							</MainReview>
+							<ReviewProgress>
+								<ProgressRow>
+									<ProgressScale>Excelente</ProgressScale>
+									<ProgressBar color="#4EAD52" progress={80} />
+								</ProgressRow>
+								<ProgressRow>
+									<ProgressScale>Bueno</ProgressScale>
+									<ProgressBar color="#A5D431" progress={60} />
+								</ProgressRow>
+								<ProgressRow>
+									<ProgressScale>Normal</ProgressScale>
+									<ProgressBar color="#F7E642" progress={40} />
+								</ProgressRow>
+								<ProgressRow>
+									<ProgressScale>Deficiente</ProgressScale>
+									<ProgressBar color="#FDAA2C" progress={20} />
+								</ProgressRow>
+								<ProgressRow>
+									<ProgressScale>Malo</ProgressScale>
+									<ProgressBar color="#EE3A19" progress={10} />
+								</ProgressRow>
+							</ReviewProgress>
+							<TeacherTrajectory isDesktop={false}>
+								<p>¿Interesado en este profesor?</p>
+								<a href="#">Mira su trayectoria</a>
+							</TeacherTrajectory>
+						</GeneralSection>
+					) : (
+						<TeacherComment
+							comment={
+								`
+									Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+									Aliquam euismod, nisl quis tincidunt aliquam, nunc nisl
+									ultricies nunc, quis aliquet nunc nisl quis nunc. Nulla
+									quis nisl quis nunc. Nulla quis nisl quis nunc. Nulla quis
+									nisl quis nunc. Nulla quis nisl quis nunc. Nulla quis nisl
+									quis nunc. Nulla quis nisl quis nunc. Nulla quis nisl quis
+									nunc. Nulla quis nisl quis nunc. Nulla quis nisl quis nunc.
+									Nulla quis nisl quis nunc. Nulla quis nisl quis nunc. Nulla
+									quis nisl quis nunc. Nulla quis nisl quis nunc. Nulla quis
+									nisl quis nunc. Nulla quis nisl quis nunc. Nulla quis nisl
+									quis nunc. Nulla quis nisl quis nunc. Nulla quis nisl quis
+								`
+							}
+						/>
+					)
+				}
+			</MainInfo>
 		</Container>
 	);
 }
@@ -84,6 +109,7 @@ const Container = styled.div`
 	
 	@media (min-width: 768px) {
 		flex-direction: row;
+		gap: 30px;
   }
 `;
 
@@ -104,7 +130,7 @@ const TeacherInfo = styled.div`
   }
 	
 	@media (min-width: 768px) {
-		width: 30%;
+		width: fit-content;
 		height: 100%;
 		margin-bottom: 0;
   }
@@ -147,10 +173,18 @@ const GeneralSection = styled.div`
   height: 50%;
 	
 	@media (min-width: 768px) {
-		width: 70%;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
 		height: 100%;
-		padding: 0 4rem;
   }
+`;
+
+const MainInfo = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	width: 100%;
 `;
 
 const Sections = styled.div`
@@ -164,7 +198,7 @@ const Section = styled.div`
 	width: 50%;
   border-bottom: ${(props) => (props.isActive ? '2px solid #fff' : 'none')};
 	text-align: center;
-	font-size: clamp(16px, 3vw, 26px);
+	font-size: clamp(16px, 3vw, 18px);
 	font-weight: ${(props) => (props.isActive ? 'bold' : 'normal')};
 	cursor: pointer;
 	padding: 6px 0;
@@ -175,20 +209,29 @@ const MainReview = styled.div`
 	flex-direction: column;
 	align-items: center;
 
-  p {
-    font-size: clamp(16px, 3vw, 24px);
+  .title, .description {
+    font-size: clamp(16px, 3vw, 20px);
 	  font-weight: 300;
   }
 
-  h1 {
-    font-size: clamp(80px, 9vw, 100px);
+ 	.rating {
+    font-size: clamp(80px, 9vw, 90px);
     font-weight: bold;
+    max-height: 90px;
+    display: flex;
+    align-items: center;
   }
 	
+	.description{
+		margin-top: 12px;
+	}
+	
+	.rr--group{
+		max-width: 250px;
+	}
+	
 	@media (min-width: 768px) {
-    .rr--group{
-      max-width: 50% !important;
-    }
+		width: fit-content;
   }
 `;
 
@@ -196,17 +239,27 @@ const ReviewProgress = styled.div`
   display: flex;
   flex-direction: column;
 	margin-top: 18px;
+	
+	@media (min-width: 768px) {
+		justify-content: center;
+		gap: 12px;
+		margin-top: 0;
+		width: 60%;
+		height: 100%;
+		padding-right: 12px;
+	}
 `;
 
 const ProgressRow = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+	justify-content: center;
 `;
 
 const ProgressScale = styled.div`
+  word-wrap: break-word;
   width: 30%;
-	font-size: clamp(16px, 3vw, 24px);
+	font-size: clamp(14px, 3vw, 16px);
 `;
 
 const ProgressBar = styled.div`
@@ -231,13 +284,13 @@ const TeacherTrajectory = styled.div`
   text-align: left;
 
   p {
-    font-size: clamp(16px, 3vw, 24px);
+    font-size: clamp(16px, 3vw, 18px);
     margin-bottom: 10px;
   }
 
   a {
     display: block;
-    font-size: clamp(16px, 3vw, 24px);
+    font-size: clamp(16px, 3vw, 18px);
     color: #fff;
     font-weight: bold;
   }
