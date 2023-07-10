@@ -35,18 +35,11 @@ export const FeaturesModal = ({ openModal, openModalSetter }) => {
 									<FeatureIcon>📚</FeatureIcon>
 									<FeatureText onClick={()=>toast(
 										"Cuando selecciones un profesor, podrás ver su trayectoria académica",
-										{
-											icon: "📚",
-											style: {
-												borderRadius: "10px",
-												background: "rgba(40,40,40,0.8)",
-												color: "#fff",
-											},
-										}
+										{icon: "📚",}
 									)}>Ver trayectoria de profesores</FeatureText>
 								</FeatureItem>
 							</ul>
-							<BackToMenuLink href='/'>Volver al menú principal</BackToMenuLink>
+							<BackToMenuLink href='/'> 🔙 Volver al menú principal</BackToMenuLink>
 						</ModalContent>
 					</motion.div>
 				</ModalBackdrop>

@@ -6,6 +6,7 @@ import {Footer} from "../../components/public/Footer.jsx";
 import {FeaturesModal} from "../../components/public/FeaturesModal.jsx";
 import {useState} from "react";
 import {Toaster} from "react-hot-toast";
+
 export function LandingLayout() {
 
 	const [openModal, setOpenModal] = useState(false)
@@ -17,13 +18,19 @@ export function LandingLayout() {
 				openModalSetter={setOpenModal}
 			/>
 			<CustomHeader>
-				<TbGridDots fontSize={'40px'} cursor={'pointer'} onClick={()=>setOpenModal(!openModal)}/>
+				<TbGridDots fontSize={'40px'} cursor={'pointer'} onClick={() => setOpenModal(!openModal)}/>
 				<Button text={'Mi cuenta'} width={'120px'} height={'40px'} fontSize={'16px'}/>
 			</CustomHeader>
 			<Toaster
 				position="bottom-right"
 				reverseOrder={false}
-			/>
+				toastOptions={{
+					style: {
+						borderRadius: "10px",
+						background: "rgba(40,40,40,0.8)",
+						color: "#fff",
+					}
+				}}/>
 			<Main>
 				<Outlet/>
 			</Main>
@@ -33,12 +40,12 @@ export function LandingLayout() {
 }
 
 const CustomHeader = styled.header`
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem;
-    box-sizing: border-box;
-    max-width: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  box-sizing: border-box;
+  max-width: 100%;
 `
 
 const Container = styled.div`
@@ -49,9 +56,9 @@ const Container = styled.div`
 `
 
 const Main = styled.main`
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    margin-bottom: 100px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  margin-bottom: 100px;
 `

@@ -2,8 +2,13 @@ import styled from "styled-components";
 import {SearchInput} from "../../components/public/SearchInput.jsx";
 import {InfoCard} from "../../components/public/InfoCard.jsx";
 import {BiTimer} from "react-icons/bi";
+import {Button} from "../../components/public/Button.jsx";
+import {FaLocationArrow} from "react-icons/fa";
+import {useNavigate} from "react-router-dom";
 
 export const Landing = () => {
+	const navigate = useNavigate();
+
 	return (
 		<>
 			<MainSection>
@@ -13,6 +18,9 @@ export const Landing = () => {
 					</ImageWrapper>
 					<SearchDescription>Encuentra a tu profesor perfecto</SearchDescription>
 					<SearchInput/>
+					<TeachersButton onClick={()=>navigate('profesores')}>
+						Ver todo los profesores🡽
+					</TeachersButton>
 				</SearchContainer>
 				<ArrowWrapper>
 					<h3>Descubre más</h3>
@@ -63,7 +71,7 @@ const SearchContainer = styled.div`
   width: 100%;
   height: 100%;
   max-width: 900px;
-  padding-top: 10%;
+  padding-top: 6%;
 	margin: 0 auto;
 `
 
@@ -77,6 +85,29 @@ const ImageWrapper = styled.div`
     height: 85px
   }
 `
+
+const TeachersButton = styled.button`
+  background: radial-gradient(circle at 0.2% 1.8%,
+  rgb(255, 90, 8) 0%,
+  rgb(88, 0, 0) 100.2%);
+	margin-top: 6rem;
+  border: none;
+  color: inherit;
+	font-size: clamp(16px, 2vw, 18px);
+	padding: clamp(4px, 1vw, 10px);
+	width: 50%;
+	height: 50px;
+	min-width: 150px;
+  max-width: 300px;
+  font-weight: 500;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+`;
 
 const SearchDescription = styled.div`
   font-size: 22px;
