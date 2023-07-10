@@ -15,6 +15,8 @@ import {TeacherList} from "./pages/public/TeacherList.jsx";
 import {QueryClient, QueryClientProvider} from "react-query";
 import {TeacherProfile} from "./pages/public/TeacherProfile.jsx";
 import {TeacherLayout} from "./pages/public/TeacherLayout.jsx";
+import {TeacherTrajectory} from "./pages/public/TeacherTrajectory.jsx";
+import {TeacherProfileLayout} from "./pages/public/TeacherProfileLayout.jsx";
 
 const queryClient = new QueryClient();
 
@@ -41,7 +43,17 @@ const router = createBrowserRouter([
 					},
 					{
 						path: ':id',
-						element: <TeacherProfile/>,
+						element: <TeacherProfileLayout/>,
+						children: [
+							{
+								index: true,
+								element: <TeacherProfile/>,
+							},
+							{
+								path: 'trayectoria',
+								element: <TeacherTrajectory/>,
+							}
+						]
 					}
 				]
 			}

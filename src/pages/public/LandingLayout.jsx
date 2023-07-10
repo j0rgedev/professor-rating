@@ -3,13 +3,27 @@ import {Outlet} from "react-router-dom";
 import {TbGridDots} from "react-icons/tb";
 import {Button} from "../../components/public/Button.jsx";
 import {Footer} from "../../components/public/Footer.jsx";
+import {FeaturesModal} from "../../components/public/FeaturesModal.jsx";
+import {useState} from "react";
+import {Toaster} from "react-hot-toast";
 export function LandingLayout() {
+
+	const [openModal, setOpenModal] = useState(false)
+
 	return (
 		<Container>
+			<FeaturesModal
+				openModal={openModal}
+				openModalSetter={setOpenModal}
+			/>
 			<CustomHeader>
-				<TbGridDots fontSize={'40px'} cursor={'pointer'}/>
+				<TbGridDots fontSize={'40px'} cursor={'pointer'} onClick={()=>setOpenModal(!openModal)}/>
 				<Button text={'Mi cuenta'} width={'120px'} height={'40px'} fontSize={'16px'}/>
 			</CustomHeader>
+			<Toaster
+				position="bottom-right"
+				reverseOrder={false}
+			/>
 			<Main>
 				<Outlet/>
 			</Main>

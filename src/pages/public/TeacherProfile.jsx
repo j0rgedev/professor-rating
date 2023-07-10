@@ -3,10 +3,12 @@ import {Rating} from "@smastrom/react-rating";
 import '@smastrom/react-rating/style.css';
 import {useState} from "react";
 import {TeacherComment} from "../../components/public/TeacherComment.jsx";
+import {IoSend} from "react-icons/io5";
 
 export function TeacherProfile() {
 	const [showGeneralSection, setShowGeneralSection] = useState(true);
 	const [showReviewSection, setShowReviewSection] = useState(false);
+	const [isCommenting, setIsCommenting] = useState(false);
 
 	const handleGeneralClick = () => {
 		setShowGeneralSection(true);
@@ -18,20 +20,12 @@ export function TeacherProfile() {
 		setShowReviewSection(true);
 	};
 
+	const handleUserReview = (e) => {
+		setIsCommenting(e.target.value.length > 0);
+	};
+
 	return (
-		<Container>
-			<TeacherInfo>
-				<ImageWrapper>
-					<img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" />
-					<Verification isVerified={true}>Verificado</Verification>
-				</ImageWrapper>
-				<h1>Nombres y apellidos</h1>
-				<TeacherTrajectory isDesktop={true}>
-					<p>¿Interesado en este profesor?</p>
-					<a href="#">Mira su trayectoria</a>
-				</TeacherTrajectory>
-			</TeacherInfo>
-			<MainInfo>
+		<>
 				<Sections>
 					<Section isActive={showGeneralSection} onClick={handleGeneralClick}>
 						General
@@ -43,43 +37,51 @@ export function TeacherProfile() {
 				{
 					showGeneralSection ? (
 						<GeneralSection>
-							<MainReview>
-								<div className={'title'}>Calificación general</div>
-								<div className={'rating'}>4.0</div>
-								<Rating value={4.0} readOnly/>
-								<div className={'description'}>Basado en 15 reviews</div>
-							</MainReview>
-							<ReviewProgress>
-								<ProgressRow>
-									<ProgressScale>Excelente</ProgressScale>
-									<ProgressBar color="#4EAD52" progress={80} />
-								</ProgressRow>
-								<ProgressRow>
-									<ProgressScale>Bueno</ProgressScale>
-									<ProgressBar color="#A5D431" progress={60} />
-								</ProgressRow>
-								<ProgressRow>
-									<ProgressScale>Normal</ProgressScale>
-									<ProgressBar color="#F7E642" progress={40} />
-								</ProgressRow>
-								<ProgressRow>
-									<ProgressScale>Deficiente</ProgressScale>
-									<ProgressBar color="#FDAA2C" progress={20} />
-								</ProgressRow>
-								<ProgressRow>
-									<ProgressScale>Malo</ProgressScale>
-									<ProgressBar color="#EE3A19" progress={10} />
-								</ProgressRow>
-							</ReviewProgress>
-							<TeacherTrajectory isDesktop={false}>
+							<MainWrapper>
+								<MainReview>
+									<div className={'title'}>Calificación general</div>
+									<div className={'rating'}>4.0</div>
+									<Rating value={4.0} readOnly/>
+									<div className={'description'}>Basado en 15 reviews</div>
+								</MainReview>
+								<ReviewProgress>
+									<ProgressRow>
+										<ProgressScale>Excelente</ProgressScale>
+										<ProgressBar color="#4EAD52" progress={80} />
+									</ProgressRow>
+									<ProgressRow>
+										<ProgressScale>Bueno</ProgressScale>
+										<ProgressBar color="#A5D431" progress={60} />
+									</ProgressRow>
+									<ProgressRow>
+										<ProgressScale>Normal</ProgressScale>
+										<ProgressBar color="#F7E642" progress={40} />
+									</ProgressRow>
+									<ProgressRow>
+										<ProgressScale>Deficiente</ProgressScale>
+										<ProgressBar color="#FDAA2C" progress={20} />
+									</ProgressRow>
+									<ProgressRow>
+										<ProgressScale>Malo</ProgressScale>
+										<ProgressBar color="#EE3A19" progress={10} />
+									</ProgressRow>
+								</ReviewProgress>
+							</MainWrapper>
+							<TeacherTrajectory>
 								<p>¿Interesado en este profesor?</p>
-								<a href="#">Mira su trayectoria</a>
+								<a href={`asad/trayectoria`}>Mira su trayectoria</a>
 							</TeacherTrajectory>
 						</GeneralSection>
 					) : (
-						<TeacherComment
-							comment={
-								`
+						<>
+							<ReviewInput>
+								<AnonymousStudentImage src="https://i.pinimg.com/originals/51/90/10/519010d9ee8167bfe445e616f260f758.png" alt="Estudiante anónimo" />
+								<StyledInput type="text" placeholder="Escribe una reseña..." onChange={handleUserReview}/>
+								<SendIcon disabled={!isCommenting}/>
+							</ReviewInput>
+							<TeacherComment
+								comment={
+									`
 									Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 									Aliquam euismod, nisl quis tincidunt aliquam, nunc nisl
 									ultricies nunc, quis aliquet nunc nisl quis nunc. Nulla
@@ -92,78 +94,14 @@ export function TeacherProfile() {
 									nisl quis nunc. Nulla quis nisl quis nunc. Nulla quis nisl
 									quis nunc. Nulla quis nisl quis nunc. Nulla quis nisl quis
 								`
-							}
-						/>
+								}
+							/>
+						</>
 					)
 				}
-			</MainInfo>
-		</Container>
+		</>
 	);
 }
-
-const Container = styled.div`
-	display: flex;
-	flex-direction: column;
-  width: 100%;
-  height: 100%;
-	
-	@media (min-width: 768px) {
-		flex-direction: row;
-		gap: 30px;
-  }
-`;
-
-const TeacherInfo = styled.div`
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	gap: 10px;
-	margin-bottom: 26px;
-  width: 100%;
-  height: 30%;
-
-  h1 {
-    font-size: clamp(26px, 2.5vw, 36px);
-    font-weight: 600;
-    text-align: center;
-  }
-	
-	@media (min-width: 768px) {
-		width: fit-content;
-		height: 100%;
-		margin-bottom: 0;
-  }
-`;
-
-const ImageWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  position: relative;
-
-  img {
-    width: 50%;
-    max-width: 300px;
-    border-radius: 50%;
-  }
-`;
-
-const Verification = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 8px;
-  left: 55%;
-  font-size: 12px;
-  background-color: ${(props) => (props.isVerified ? '#EFFBF7' : '#FFF6ED')};
-  color: ${(props) => (props.isVerified ? '#4ABA91' : '#FF8600')};
-  border: ${(props) => (props.isVerified ? '1px solid #4ABA91' : '1px solid #FF8600')};
-  padding: 1px 8px;
-  border-radius: 6px;
-`;
 
 const GeneralSection = styled.div`
 	display: flex;
@@ -173,18 +111,23 @@ const GeneralSection = styled.div`
   height: 50%;
 	
 	@media (min-width: 768px) {
-		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
 		height: 100%;
   }
 `;
 
-const MainInfo = styled.div`
+const MainWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
 	width: 100%;
+	
+	@media (min-width: 768px) {
+		flex-direction: row;
+		justify-content: space-around;
+		gap: 30px;
+	}
 `;
 
 const Sections = styled.div`
@@ -278,7 +221,6 @@ const ProgressBar = styled.div`
 `;
 
 const TeacherTrajectory = styled.div`
-	display: ${(props) => (props.isDesktop ? 'none' : 'block')};
   width: 100%;
   margin-top: 80px;
   text-align: left;
@@ -294,8 +236,49 @@ const TeacherTrajectory = styled.div`
     color: #fff;
     font-weight: bold;
   }
+`;
+
+const ReviewInput = styled.div`
+  display: flex;
+  align-items: center;
+	gap: 12px;
+	position: relative;
+`;
+
+const AnonymousStudentImage = styled.img`
+  width: 40px;
+  height: 40px;
+`;
+
+const StyledInput = styled.input`
+  height: 40px;
+  width: 100%;
+	background: #37373a;
+	border: 1px solid #37373a;
+	outline: none;
+	color: #fff;
+  border-radius: 8px;
+  padding: 5px 40px 5px 12px;
+  font-size: 14px;
+	transition: border-color 0.3s ease-in-out;
 	
-	@media (min-width: 768px) {
-		display: ${(props) => (props.isDesktop ? 'block' : 'none')};
+	&:focus{
+		border-color: #3891E3;
+	}
+`;
+
+const SendIcon = styled(IoSend)`
+  position: absolute;
+  right: 12px;
+  border-radius: 50%;
+  font-size: 28px;
+  padding: 6px;
+  transition: background 0.3s ease-in-out;
+  color: ${(props) => (props.disabled ? '#ccc' : '#3891E3')};
+	cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+
+  &:hover {
+    background: ${(props) => (props.disabled ? 'none' : 'rgba(0,0,0,0.2)')};
   }
 `;
+
