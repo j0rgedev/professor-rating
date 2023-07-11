@@ -18,7 +18,12 @@ export function LandingLayout() {
 				openModalSetter={setOpenModal}
 			/>
 			<CustomHeader>
-				<TbGridDots fontSize={'40px'} cursor={'pointer'} onClick={() => setOpenModal(!openModal)}/>
+				<DotIcon fontSize={'40px'} cursor={'pointer'} onClick={() => setOpenModal(!openModal)}/>
+				<Sections>
+					<Section href={'/'}>🏠 Inicio</Section>
+					<Section href={'#'}>🌟 Aprende a calificar</Section>
+					<Section href={'#'}>🔍 Comparación de profesores</Section>
+				</Sections>
 				<Button text={'Mi cuenta'} width={'120px'} height={'40px'} fontSize={'16px'}/>
 			</CustomHeader>
 			<Toaster
@@ -39,6 +44,7 @@ export function LandingLayout() {
 	)
 }
 
+
 const CustomHeader = styled.header`
   width: 100%;
   display: flex;
@@ -53,6 +59,57 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   background-color: #202024;
+`
+
+const DotIcon = styled(TbGridDots)`
+	color: #fff;
+	font-size: 40px;
+	cursor: pointer;
+	
+	@media (min-width: 768px) {
+		display: none;
+	}
+`
+
+const Sections = styled.div`
+	display: none;
+	@media (min-width: 768px) {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		width: 50%;
+	}
+`
+
+const Section = styled.a`
+  color: #a7a7a7;
+  font-size: clamp(14px, 1.5vw, 16px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+	text-decoration: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: radial-gradient(circle at 0.2% 1.8%,
+    rgb(255, 90, 8) 0%,
+    rgb(88, 0, 0) 100.2%);
+    transition: all 0.3s ease;
+  }
+
+  &:hover {
+    color: #ffffff;
+
+    &::after {
+      width: 100%;
+    }
+  }
 `
 
 const Main = styled.main`

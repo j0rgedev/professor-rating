@@ -39,7 +39,7 @@ export const FeaturesModal = ({ openModal, openModalSetter }) => {
 									)}>Ver trayectoria de profesores</FeatureText>
 								</FeatureItem>
 							</ul>
-							<BackToMenuLink href='/'> 🔙 Volver al menú principal</BackToMenuLink>
+							<BackToMenuLink href='/'>🏠 Inicio</BackToMenuLink>
 						</ModalContent>
 					</motion.div>
 				</ModalBackdrop>
@@ -114,4 +114,5 @@ const BackToMenuLink = styled.a`
   text-decoration: none;
   display: block;
   margin-top: auto;
+  font-size: 18px;
 `;
