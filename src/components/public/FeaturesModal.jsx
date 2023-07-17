@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 export const FeaturesModal = ({ openModal, openModalSetter }) => {
 
 	const navigate = useNavigate();
+
 	const handleModalContentClick = (event) => {
 		event.stopPropagation();
 	};
@@ -29,7 +30,10 @@ export const FeaturesModal = ({ openModal, openModalSetter }) => {
 								</FeatureItem>
 								<FeatureItem>
 									<FeatureIcon>🔍</FeatureIcon>
-									<FeatureText>Comparación de profesores</FeatureText>
+									<FeatureText onClick={()=> {
+										navigate('/profesores/comparacion')
+										openModalSetter(false)
+									}}>Comparación de profesores</FeatureText>
 								</FeatureItem>
 								<FeatureItem>
 									<FeatureIcon>📚</FeatureIcon>

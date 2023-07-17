@@ -67,13 +67,16 @@ const ImageWrapper = styled.div`
 `;
 
 const Verification = styled.div`
+  width: 50%;
+  max-width: fit-content;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
   top: 8px;
   left: 55%;
-  font-size: 12px;
+  font-size: clamp(8px, 1.5vw, 12px);
   background-color: ${(props) => (props.isVerified ? '#EFFBF7' : '#FFF6ED')};
   color: ${(props) => (props.isVerified ? '#4ABA91' : '#FF8600')};
   border: ${(props) => (props.isVerified ? '1px solid #4ABA91' : '1px solid #FF8600')};

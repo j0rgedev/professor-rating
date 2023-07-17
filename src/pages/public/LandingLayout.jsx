@@ -22,7 +22,7 @@ export function LandingLayout() {
 				<Sections>
 					<Section href={'/'}>🏠 Inicio</Section>
 					<Section href={'#'}>🌟 Aprende a calificar</Section>
-					<Section href={'#'}>🔍 Comparación de profesores</Section>
+					<Section href={'/profesores/comparacion'}>🔍 Comparación de profesores</Section>
 				</Sections>
 				<Button text={'Mi cuenta'} width={'120px'} height={'40px'} fontSize={'16px'}/>
 			</CustomHeader>

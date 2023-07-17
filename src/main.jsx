@@ -17,6 +17,7 @@ import {TeacherProfile} from "./pages/public/TeacherProfile.jsx";
 import {TeacherLayout} from "./pages/public/TeacherLayout.jsx";
 import {TeacherTrajectory} from "./pages/public/TeacherTrajectory.jsx";
 import {TeacherProfileLayout} from "./pages/public/TeacherProfileLayout.jsx";
+import {TeacherComparison} from "./pages/public/TeacherComparison.jsx";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
 								element: <TeacherTrajectory/>,
 							}
 						]
+					},
+					{
+						path: 'comparacion',
+						element: <TeacherComparison/>,
 					}
 				]
 			}
