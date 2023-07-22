@@ -46,7 +46,8 @@ export function AdminLayout() {
 
 const Container = styled.div`
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   background-color: #0f0f0f;
   padding: 1rem;
 `;

@@ -5,11 +5,12 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { motion } from "framer-motion";
 import { newTeacherSchema } from "../../setup/config/newTeacherSchema.js";
 import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import {useMutation, useQuery} from "react-query";
 
 import CustomSelect from "./CustomSelect.jsx";
 import { createTeacher, updateTeacher } from "../../setup/api/teachers.js";
 import { getCourses, addTeacherToCourse } from "../../setup/api/courses.js";
+import toast from "react-hot-toast";
 
 const TeacherModal = ({ modalState, modalStateSetter, _teacher, isFromRow = false }) => {
   const [teacher, setTeacher] = useState({
@@ -18,8 +19,6 @@ const TeacherModal = ({ modalState, modalStateSetter, _teacher, isFromRow = fals
     courses: _teacher.courses ? _teacher.courses.map((obj) => obj.name) : [],
   });
   const [coursesOptions, setCoursesOptions] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState("");
-  const [selectedCourseId, setSelectedCourseId] = useState("");
 
   useQuery({
     queryKey: ["courses"],
@@ -34,9 +33,43 @@ const TeacherModal = ({ modalState, modalStateSetter, _teacher, isFromRow = fals
     },
   });
 
+  let toastId = null;
+
+  const {mutateAsync: createTeacherAsync, isSuccess} = useMutation({
+    mutationFn: createTeacher,
+    onSuccess: async (data) => {
+      toast.success("Profesor agregado correctamente", { id: toastId });
+      query.prefetchQuery(['teachers'])
+      modalStateSetter(false);
+    },
+    onError: (error) => {
+      toast.error("Error al agregar profesor", { id: toastId });
+    },
+  });
+
+  const {mutateAsync: addCourseToTeacherAsync, data} = useMutation({
+    mutationFn: addTeacherToCourse,
+    onSuccess: async (data) => {
+      toast.success("Curso agregado correctamente", { id: toastId });
+    },
+    onError: (error) => {
+      toast.error("Error al agregar curso", { id: toastId });
+    },
+    enabled: isSuccess,
+  });
+
   const onSubmit = async (values) => {
-    console.log(teacher);
-    console.log(values);
+    const randomNumber = Math.floor(Math.random() * 99);
+    const teacherBody = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      picture: `https://i.pravatar.cc/150?img=${randomNumber}`,
+    }
+    toastId = toast.loading("Agregando profesor...");
+    await createTeacherAsync(teacherBody);
+    values.courses.forEach(async (course) => {
+      await addCourseToTeacherAsync(data._id, course.value);
+    });
   };
 
   if (!modalState) {
@@ -94,20 +127,6 @@ const TeacherModal = ({ modalState, modalStateSetter, _teacher, isFromRow = fals
                   )}
                 </InputWrapper>
               </ModalContent>
-              {/*<TeacherCourses>*/}
-              {/*  {teacher.courses.map((course, index) => (*/}
-              {/*    <CourseContainer key={index}>*/}
-              {/*      <CourseInfo>{course}</CourseInfo>*/}
-              {/*      <RemoveCourseButton*/}
-              {/*        onClick={() => {*/}
-              {/*          handleRemoveCourse(index);*/}
-              {/*        }}*/}
-              {/*      >*/}
-              {/*        <AiOutlineClose />*/}
-              {/*      </RemoveCourseButton>*/}
-              {/*    </CourseContainer>*/}
-              {/*  ))}*/}
-              {/*</TeacherCourses>*/}
               <ModalFooter>
                 <StyledButton
                   main={false}

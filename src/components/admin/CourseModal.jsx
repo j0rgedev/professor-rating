@@ -4,17 +4,18 @@ import {motion} from "framer-motion";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import {newCourseSchema} from "../../setup/config/newCourseSchema.js";
 import {createCourse, updateCourse, deleteCourse} from "../../setup/api/courses.js";
-import {useMutation} from "react-query";
+import {useMutation, useQueryClient} from "react-query";
 import toast from "react-hot-toast";
 
 const CourseModal = ({modalState, modalStateSetter, _course, isFromRow}) => {
-	const [course, setCourse] = useState({code: _course.code, name: _course.name});
 	let toastId = null;
+	const query = useQueryClient();
 
 	const {isLoading: isUpdateMutationLoading ,mutateAsync: updateMutation} = useMutation({
 		mutationFn: updateCourse,
 		onSuccess: () => {
 			toast.success("Curso actualizado", {id: toastId});
+			query.prefetchQuery(['courses'])
 		},
 		onError: () => {
 			toast.error("Error al actualizar", {id: toastId});
@@ -23,8 +24,16 @@ const CourseModal = ({modalState, modalStateSetter, _course, isFromRow}) => {
 
 	const onSubmit = async (values) => {
 		if (isFromRow) {
-		  await updateMutation(values.code, values.name)
+			const body = {
+				code: values.code,
+				name: values.name,
+			};
 			toastId = toast.loading("Actualizando curso...");
+			const data = {
+				id: values._id,
+				course: body,
+			}
+			await updateMutation(data)
 		  modalStateSetter(false);
 		}
 	};
@@ -41,7 +50,7 @@ const CourseModal = ({modalState, modalStateSetter, _course, isFromRow}) => {
 			>
 				<ModalHeader>Nuevo Curso</ModalHeader>
 				<Formik
-					initialValues={course}
+					initialValues={_course}
 					validationSchema={newCourseSchema}
 					onSubmit={onSubmit}
 				>
@@ -78,9 +87,6 @@ const CourseModal = ({modalState, modalStateSetter, _course, isFromRow}) => {
 									main={false}
 									type={"button"}
 									onClick={() => {
-										if (!isFromRow) {
-											setCourse({code: "", name: ""});
-										}
 										modalStateSetter(false);
 									}}
 								>

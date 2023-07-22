@@ -14,9 +14,7 @@ const CustomSelect = ({
 	const onChange = (option) => {
 		form.setFieldValue(
 			field.name,
-			isMulti
-				? option.map((item) => item.value)
-				: option.value
+			isMulti ? option.map((item) => item.value) : option.value
 		);
 	};
 
@@ -82,19 +80,18 @@ const CustomSelect = ({
 		})
 	};
 
-	const ola = ["64985dbb5c0b2961fb884cd9","64985dd45c0b2961fb884cdc"]
-
 	useEffect(() => {
 		if (initialValues.length > 0) {
-			const selectedOptions = initialValues.map((curso, index) => ({
-				label: curso,
-				value: ola[index],
-			}));
+			const selectedOptions = initialValues.map((curso) => {
+				const option = options.find((opt) => opt.label === curso);
+				return option ? option : null;
+			});
+
 			form.setFieldValue(
 				field.name,
 				isMulti
-					? selectedOptions.map((item) => item.value)
-					: selectedOptions[0].value
+					? selectedOptions.filter((item) => item !== null).map((item) => item.value)
+					: selectedOptions.length > 0 ? selectedOptions[0].value : ""
 			);
 		}
 	}, []);

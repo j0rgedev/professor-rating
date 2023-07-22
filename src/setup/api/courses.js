@@ -24,8 +24,12 @@ const createCourse = async (course) => {
   return response.data;
 };
 
-const updateCourse = async (id, course) => {
-  const response = await api.put(`/courses/${id}`, course);
+const updateCourse = async ({id, course}) => {
+  console.log(course)
+  const response = await api.put(`/courses/${id}`, {
+    code: course.code,
+    name: course.name,
+  });
   return response.data;
 };
 

@@ -1,9 +1,34 @@
 import styled from "styled-components";
 import {motion} from "framer-motion";
+import {deleteTeacher} from "../../setup/api/teachers.js";
+import {useMutation, useQueryClient} from "react-query";
+import toast from "react-hot-toast";
 
 export function DeleteModal({modalState, modalStateSetter, data, title, description}) {
 
+	const query = useQueryClient();
+
 	if(!modalState) return null
+
+	let toastId = null;
+
+	const {mutateAsync} = useMutation({
+		mutationFn: deleteTeacher,
+		onSuccess: () => {
+			toast.success("Profesor eliminado con éxito", {id: toastId})
+			modalStateSetter(false)
+			query.prefetchQuery(['teachers'])
+		},
+		onError: () => {
+			toast.error("Error al eliminar profesor", {id: toastId})
+		}
+	})
+
+	const handleDelete = async () => {
+		toastId = toast.loading("Eliminando profesor...")
+		await mutateAsync(data._id)
+	}
+
 
 	return (
 		<Background>
@@ -19,7 +44,7 @@ export function DeleteModal({modalState, modalStateSetter, data, title, descript
 				</MainInfo>
 				<Buttons>
 					<Button isMain={false} onClick={() => {modalStateSetter(false)}}>Cancelar</Button>
-					<Button isMain={true}>Eliminar</Button>
+					<Button isMain={true} onClick={handleDelete}>Eliminar</Button>
 				</Buttons>
 			</Container>
 		</Background>

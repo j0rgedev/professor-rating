@@ -61,7 +61,7 @@ export function TeacherRow(teacher) {
       </Top>
       <Image>
         <img
-          src="https://news.iu.edu/live/image/gid/2/715_62cd8be92bbf8_element_12_f2f9513fbe0736fdc26f0b57467ff162-1164-head20shot-Edited.jpg"
+          src={teacher.teacher.picture}
           alt="teacher_photo"
         />
       </Image>

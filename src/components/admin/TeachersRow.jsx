@@ -119,7 +119,9 @@ const Courses = styled.div`
 `;
 
 const Course = styled.div`
-  white-space: nowrap;
+  max-width: 200px;
+	overflow: hidden;
+	white-space: nowrap;
   padding: 4px 8px;
   height: 100%;
   background-color: #202224;
