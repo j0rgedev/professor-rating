@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { AiOutlineClose } from "react-icons/ai";
 import { BsPatchPlusFill } from "react-icons/bs";
-import { motion } from "framer-motion";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { motion } from "framer-motion";
 import { newTeacherSchema } from "../../setup/config/newTeacherSchema.js";
-import { getCourses, addTeacherToCourse } from "../../setup/api/courses.js";
-import { createTeacher, updateTeacher } from "../../setup/api/teachers.js";
-import {useQuery} from "react-query";
+import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+
 import CustomSelect from "./CustomSelect.jsx";
+import { createTeacher, updateTeacher } from "../../setup/api/teachers.js";
+import { getCourses, addTeacherToCourse } from "../../setup/api/courses.js";
 
 const TeacherModal = ({ modalState, modalStateSetter, _teacher, isFromRow = false }) => {
   const [teacher, setTeacher] = useState({
     firstName: _teacher.firstName,
     lastName: _teacher.lastName,
-    courses: _teacher.courses ? _teacher.courses.map((obj) => obj.name) : []
+    courses: _teacher.courses ? _teacher.courses.map((obj) => obj.name) : [],
   });
   const [coursesOptions, setCoursesOptions] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
@@ -24,16 +25,18 @@ const TeacherModal = ({ modalState, modalStateSetter, _teacher, isFromRow = fals
     queryKey: ["courses"],
     queryFn: getCourses,
     onSuccess: (data) => {
-      setCoursesOptions(data.map((course) => ({
-        label: course.name,
-        value: course._id
-      })));
-    }
+      setCoursesOptions(
+        data.map((course) => ({
+          label: course.name,
+          value: course._id,
+        }))
+      );
+    },
   });
 
   const onSubmit = async (values) => {
     console.log(teacher);
-    console.log(values)
+    console.log(values);
   };
 
   if (!modalState) {
@@ -49,11 +52,7 @@ const TeacherModal = ({ modalState, modalStateSetter, _teacher, isFromRow = fals
         transition={{ duration: 0.3 }}
       >
         <ModalHeader>{isFromRow ? "Actualizar" : "Nuevo"} Profesor</ModalHeader>
-        <Formik
-          initialValues={teacher}
-          validationSchema={newTeacherSchema}
-          onSubmit={onSubmit}
-        >
+        <Formik initialValues={teacher} validationSchema={newTeacherSchema} onSubmit={onSubmit}>
           {({ values, errors, touched, isSubmitting, handleBlur, handleChange }) => (
             <CustomForm>
               <ModalContent>
@@ -82,19 +81,17 @@ const TeacherModal = ({ modalState, modalStateSetter, _teacher, isFromRow = fals
                   {touched.lastName && errors.lastName && <p>{errors.lastName}</p>}
                 </InputWrapper>
                 <InputWrapper isLast={true}>
-                  {
-                    teacher && (
-                      <Field
-                        name={"courses"}
-                        initialValues={values.courses}
-                        options={coursesOptions}
-                        component={CustomSelect}
-                        placeholder={"Seleccionar curso"}
-                        isMulti={true}
-                        className={touched.courses && errors.courses ? "error" : null}
-                      />
-                    )
-                  }
+                  {teacher && (
+                    <Field
+                      name={"courses"}
+                      initialValues={values.courses}
+                      options={coursesOptions}
+                      component={CustomSelect}
+                      placeholder={"Seleccionar curso"}
+                      isMulti={true}
+                      className={touched.courses && errors.courses ? "error" : null}
+                    />
+                  )}
                 </InputWrapper>
               </ModalContent>
               {/*<TeacherCourses>*/}
@@ -116,7 +113,7 @@ const TeacherModal = ({ modalState, modalStateSetter, _teacher, isFromRow = fals
                   main={false}
                   type={"button"}
                   onClick={() => {
-                    setTeacher({ firstName: "", lastName: "", courses: []});
+                    setTeacher({ firstName: "", lastName: "", courses: [] });
                     modalStateSetter(false);
                   }}
                 >
@@ -222,7 +219,7 @@ const Input = styled(Field)`
   padding: 4px;
   margin-bottom: 4px;
   outline: none;
-  
+
   &.error {
     border-bottom: 1px solid #ff0000;
   }

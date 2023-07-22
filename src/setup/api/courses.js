@@ -49,6 +49,11 @@ const getCoursesByTeacher = async (teacherId) => {
   return response.data;
 };
 
+const getTeachersByCourse = async (courseId) => {
+  const response = await api.get(`/courses/${courseId}/teachers`);
+  return response.data;
+};
+
 export {
   getCourses,
   getCourseById,
@@ -59,4 +64,5 @@ export {
   addTeacherToCourse,
   removeTeacherFromCourse,
   getCoursesByTeacher,
+  getTeachersByCourse,
 };
