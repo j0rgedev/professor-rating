@@ -1,14 +1,17 @@
+import { TeacherRow } from "../../components/public/TeacherRow.jsx";
 import styled from "styled-components";
+import { useParams } from "react-router";
 import { useQuery } from "react-query";
 
-import { getTeachers } from "../../setup/api/teachers.js";
-import { TeacherRow } from "../../components/public/TeacherRow.jsx";
+import { getTeachersByCourse } from "../../setup/api/courses.js";
 
-export function TeacherList() {
+export function TeacherListCompare() {
+  const { id } = useParams();
+
   const { data: teachers, isLoading: areTeachersLoading } = useQuery({
     queryKey: ["teachers"],
     queryFn: async () => {
-      return await getTeachers();
+      return await getTeachersByCourse(id);
     },
   });
 

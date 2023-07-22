@@ -1,41 +1,66 @@
-import {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
+
+import { getCourses } from "../../setup/api/courses.js";
 
 export const SearchInput = () => {
-	const [showDropdown, setShowDropdown] = useState(false);
-	const toggleDropdown = () => setShowDropdown(!showDropdown);
+  const navigate = useNavigate();
 
-	const dropdownRef = useRef(null);
+  const [courses, setCourses] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-	useEffect(() => {
-		const handleClickOutside = (event) => {
-			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-				setShowDropdown(false);
-			}
-		};
-		document.addEventListener("click", handleClickOutside);
-		return () => {
-			document.removeEventListener("click", handleClickOutside);
-		};
-	}, []);
+  const toggleDropdown = () => setShowDropdown(!showDropdown);
 
-	return (
-		<Form ref={dropdownRef}>
-			<Input type="text" placeholder={'Busca a tu docente ...'} onClick={toggleDropdown}/>
-			{showDropdown && (
-				<Dropdown>
-					<ul>
-						<li>Profesor 1</li>
-						<li>Profesor 2</li>
-						<li>Profesor 3</li>
-						<li>Profesor 4</li>
-						<li>Profesor 5</li>
-						<li>Profesor 6</li>
-					</ul>
-				</Dropdown>
-			)}
-		</Form>
-	);
+  const dropdownRef = useRef(null);
+
+  useQuery({
+    queryKey: ["courses"],
+    queryFn: getCourses,
+    onSuccess: (data) => {
+      setCourses(
+        data.map((course) => ({
+          label: course.name,
+          value: course._id,
+        }))
+      );
+    },
+  });
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <Form ref={dropdownRef}>
+      <Input type="text" placeholder={"Busca tu curso ..."} onClick={toggleDropdown} />
+      {showDropdown && (
+        <Dropdown>
+          <ul>
+            {courses.map((course) => (
+              <li
+                key={course.value}
+                onClick={() => {
+                  navigate(`/profesores/curso/${course.value}`);
+                }}
+              >
+                {course.label}
+              </li>
+            ))}
+          </ul>
+        </Dropdown>
+      )}
+    </Form>
+  );
 };
 
 const Form = styled.form`
@@ -91,7 +116,7 @@ const Dropdown = styled.div`
     cursor: pointer;
 
     &:hover {
-      background-color: #0A0A0F;
+      background-color: #0a0a0f;
     }
   }
 `;

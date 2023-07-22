@@ -1,55 +1,70 @@
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import {useNavigate} from "react-router-dom";
+import styled from "styled-components";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export const FeaturesModal = ({ openModal, openModalSetter }) => {
+  const navigate = useNavigate();
 
-	const navigate = useNavigate();
+  const handleModalContentClick = (event) => {
+    event.stopPropagation();
+  };
 
-	const handleModalContentClick = (event) => {
-		event.stopPropagation();
-	};
-
-	return (
-		<>
-			{openModal && (
-				<ModalBackdrop onClick={() => openModalSetter(false)}>
-					<motion.div
-						initial={{ y: '100vh' }}
-						animate={{ y: 0 }}
-						transition={{ duration: 0.3 }}
-						className='modal-container'
-					>
-						<ModalContent onClick={handleModalContentClick}>
-							<h2>Secciones</h2>
-							<ul>
-								<FeatureItem>
-									<FeatureIcon>🌟</FeatureIcon>
-									<FeatureText>Aprende a calificar</FeatureText>
-								</FeatureItem>
-								<FeatureItem>
-									<FeatureIcon>🔍</FeatureIcon>
-									<FeatureText onClick={()=> {
-										navigate('/profesores/comparacion')
-										openModalSetter(false)
-									}}>Comparación de profesores</FeatureText>
-								</FeatureItem>
-								<FeatureItem>
-									<FeatureIcon>📚</FeatureIcon>
-									<FeatureText onClick={()=>toast(
-										"Cuando selecciones un profesor, podrás ver su trayectoria académica",
-										{icon: "📚",}
-									)}>Ver trayectoria de profesores</FeatureText>
-								</FeatureItem>
-							</ul>
-							<BackToMenuLink href='/'>🏠 Inicio</BackToMenuLink>
-						</ModalContent>
-					</motion.div>
-				</ModalBackdrop>
-			)}
-		</>
-	);
+  return (
+    <>
+      {openModal && (
+        <ModalBackdrop onClick={() => openModalSetter(false)}>
+          <motion.div
+            initial={{ y: "100vh" }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="modal-container"
+          >
+            <ModalContent onClick={handleModalContentClick}>
+              <h2>Secciones</h2>
+              <ul>
+                <FeatureItem>
+                  <FeatureIcon>🌟</FeatureIcon>
+                  <FeatureText
+                    onClick={() => {
+                      navigate("/profesores");
+                      openModalSetter(false);
+                    }}
+                  >
+                    Profesores
+                  </FeatureText>
+                </FeatureItem>
+                <FeatureItem>
+                  <FeatureIcon>🔍</FeatureIcon>
+                  <FeatureText
+                    onClick={() => {
+                      navigate("/profesores/comparacion");
+                      openModalSetter(false);
+                    }}
+                  >
+                    Comparación de profesores
+                  </FeatureText>
+                </FeatureItem>
+                <FeatureItem>
+                  <FeatureIcon>📚</FeatureIcon>
+                  <FeatureText
+                    onClick={() =>
+                      toast("Cuando selecciones un profesor, podrás ver su trayectoria académica", {
+                        icon: "📚",
+                      })
+                    }
+                  >
+                    Ver trayectoria de profesores
+                  </FeatureText>
+                </FeatureItem>
+              </ul>
+              <BackToMenuLink href="/">🏠 Inicio</BackToMenuLink>
+            </ModalContent>
+          </motion.div>
+        </ModalBackdrop>
+      )}
+    </>
+  );
 };
 
 const ModalBackdrop = styled.div`
@@ -61,7 +76,7 @@ const ModalBackdrop = styled.div`
   z-index: 100;
   background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(8px);
-  display: ${props => (props.isOpen ? 'none' : 'flex')};
+  display: ${(props) => (props.isOpen ? "none" : "flex")};
 
   .modal-container {
     width: 100%;
@@ -78,17 +93,17 @@ const ModalContent = styled.div`
   position: relative;
   width: 100%;
   height: 60%;
-  background-color: #3C3C3E;
+  background-color: #3c3c3e;
   border-radius: 16px 16px 0 0;
   box-shadow: rgba(255, 255, 255, 0.5) 0 10px 18px;
   padding: 16px;
   overflow: auto;
   color: #fff;
-	
-	h2 {
-		font-size: 24px;
-		margin-bottom: 10px;
-	}
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
 
   ul {
     list-style: none;
@@ -110,7 +125,7 @@ const FeatureIcon = styled.span`
 
 const FeatureText = styled.span`
   font-size: 18px;
-	cursor: pointer;
+  cursor: pointer;
 `;
 
 const BackToMenuLink = styled.a`

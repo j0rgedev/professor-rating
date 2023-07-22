@@ -1,41 +1,60 @@
-import styled from 'styled-components'
-import {Outlet} from "react-router-dom";
+import styled from "styled-components";
+import { Outlet } from "react-router-dom";
+import { useParams } from "react-router";
+import { useQuery } from "react-query";
+import { useState } from "react";
+import { getTeacherById } from "../../setup/api/teachers.js";
+
 export function TeacherProfileLayout() {
-	return (
-		<Container>
-			<TeacherInfo>
-				<ImageWrapper>
-					<img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" />
-					<Verification isVerified={true}>Verificado</Verification>
-				</ImageWrapper>
-				<h1>Nombres y apellidos</h1>
-			</TeacherInfo>
-			<MainInfo>
-				<Outlet/>
-			</MainInfo>
-		</Container>
-	)
+  const { id } = useParams();
+
+  const [teacher, setTeacher] = useState({});
+
+  useQuery({
+    queryKey: ["teacher", id],
+    queryFn: async () => {
+      return await getTeacherById(id);
+    },
+    onSuccess: (data) => {
+      setTeacher(data);
+    },
+  });
+
+  return (
+    <Container>
+      <TeacherInfo>
+        <ImageWrapper>
+          <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" />
+          <Verification isVerified={true}>Verificado</Verification>
+        </ImageWrapper>
+        <h1>{`${teacher.firstName} ${teacher.lastName}`}</h1>
+      </TeacherInfo>
+      <MainInfo>
+        <Outlet />
+      </MainInfo>
+    </Container>
+  );
 }
 
 const Container = styled.div`
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
-	
-	@media (min-width: 768px) {
-		flex-direction: row;
-		gap: 30px;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: 30px;
   }
 `;
 
 const TeacherInfo = styled.div`
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	gap: 10px;
-	margin-bottom: 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 26px;
   width: 100%;
   height: 30%;
 
@@ -44,11 +63,11 @@ const TeacherInfo = styled.div`
     font-weight: 600;
     text-align: center;
   }
-	
-	@media (min-width: 768px) {
-		width: fit-content;
-		height: 100%;
-		margin-bottom: 0;
+
+  @media (min-width: 768px) {
+    width: fit-content;
+    height: 100%;
+    margin-bottom: 0;
   }
 `;
 
@@ -77,16 +96,16 @@ const Verification = styled.div`
   top: 8px;
   left: 55%;
   font-size: clamp(8px, 1.5vw, 12px);
-  background-color: ${(props) => (props.isVerified ? '#EFFBF7' : '#FFF6ED')};
-  color: ${(props) => (props.isVerified ? '#4ABA91' : '#FF8600')};
-  border: ${(props) => (props.isVerified ? '1px solid #4ABA91' : '1px solid #FF8600')};
+  background-color: ${(props) => (props.isVerified ? "#EFFBF7" : "#FFF6ED")};
+  color: ${(props) => (props.isVerified ? "#4ABA91" : "#FF8600")};
+  border: ${(props) => (props.isVerified ? "1px solid #4ABA91" : "1px solid #FF8600")};
   padding: 1px 8px;
   border-radius: 6px;
 `;
 
 const MainInfo = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
-	width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
 `;
